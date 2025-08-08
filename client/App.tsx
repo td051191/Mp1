@@ -33,15 +33,24 @@ const App = () => (
         <Sonner />
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/fruits" element={<Fruits />} />
-            <Route path="/vegetables" element={<Vegetables />} />
-            <Route path="/organic" element={<Organic />} />
-            <Route path="/seasonal" element={<Seasonal />} />
-            <Route path="/bundles" element={<Bundles />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/fruits" element={<Fruits />} />
+          <Route path="/vegetables" element={<Vegetables />} />
+          <Route path="/organic" element={<Organic />} />
+          <Route path="/seasonal" element={<Seasonal />} />
+          <Route path="/bundles" element={<Bundles />} />
+
+          {/* Admin Routes */}
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/products" element={<AdminProducts />} />
+          <Route path="/admin/categories" element={<AdminCategories />} />
+          <Route path="/admin/content" element={<AdminContent />} />
+          <Route path="/admin/newsletter" element={<AdminNewsletter />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
+
+          {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
         </BrowserRouter>
       </TooltipProvider>
     </LanguageProvider>
