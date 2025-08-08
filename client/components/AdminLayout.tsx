@@ -108,6 +108,37 @@ export function AdminLayout({ children }: AdminLayoutProps) {
                 <Link to="/" className="text-sm text-muted-foreground hover:text-foreground">
                   ← Back to Site
                 </Link>
+
+                {/* User Dropdown */}
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className="flex items-center gap-2">
+                      <User className="w-4 h-4" />
+                      <span className="hidden sm:inline">{user?.fullName || user?.username}</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <div className="px-2 py-1.5">
+                      <div className="text-sm font-medium">{user?.fullName || user?.username}</div>
+                      <div className="text-xs text-muted-foreground">Administrator</div>
+                    </div>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem
+                      className="text-destructive focus:text-destructive cursor-pointer"
+                      onClick={async () => {
+                        try {
+                          await logout();
+                          navigate('/admin/login');
+                        } catch (error) {
+                          console.error('Logout error:', error);
+                        }
+                      }}
+                    >
+                      <LogOut className="w-4 h-4 mr-2" />
+                      Sign out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </div>
           </div>
