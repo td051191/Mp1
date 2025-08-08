@@ -103,19 +103,19 @@ export function Header() {
         <nav className="hidden md:flex items-center justify-between py-3">
           <div className="flex items-center gap-8">
             <Link to="/fruits" className="text-foreground hover:text-primary font-medium transition-colors">
-              Fruits
+              {language === 'en' ? 'Fruits' : 'Trái cây'}
             </Link>
             <Link to="/vegetables" className="text-foreground hover:text-primary font-medium transition-colors">
-              Vegetables
+              {language === 'en' ? 'Vegetables' : 'Rau củ'}
             </Link>
             <Link to="/organic" className="text-foreground hover:text-primary font-medium transition-colors">
-              Organic
+              {language === 'en' ? 'Organic' : 'Hữu cơ'}
             </Link>
             <Link to="/seasonal" className="text-foreground hover:text-primary font-medium transition-colors">
-              Seasonal
+              {language === 'en' ? 'Seasonal' : 'Theo mùa'}
             </Link>
             <Link to="/bundles" className="text-foreground hover:text-primary font-medium transition-colors">
-              Bundles
+              {language === 'en' ? 'Bundles' : 'Gói combo'}
             </Link>
           </div>
           <div className="flex items-center gap-4">
