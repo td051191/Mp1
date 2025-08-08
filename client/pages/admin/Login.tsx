@@ -29,16 +29,25 @@ export default function AdminLogin() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
-    
+
     if (!formData.username || !formData.password) {
       setError('Please enter both username and password');
       return;
     }
-    
-    loginMutation.mutate(formData);
+
+    setIsSubmitting(true);
+    try {
+      await login(formData.username, formData.password);
+      const from = (location.state as any)?.from?.pathname || '/admin';
+      navigate(from, { replace: true });
+    } catch (error: any) {
+      setError(error.message || 'Login failed');
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (field: string, value: string) => {
