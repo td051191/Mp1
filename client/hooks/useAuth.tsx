@@ -12,8 +12,10 @@ interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   isLoading: boolean;
+  isWarningShown: boolean;
   login: (username: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
+  extendSession: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
