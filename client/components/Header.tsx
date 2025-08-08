@@ -18,9 +18,19 @@ export function Header() {
             <span className="hidden md:inline">Fresh daily delivery</span>
           </div>
           <div className="flex items-center gap-4">
-            <button className="hover:text-foreground transition-colors">EN</button>
+            <button
+              className={`hover:text-foreground transition-colors ${language === 'en' ? 'text-foreground font-medium' : ''}`}
+              onClick={() => setLanguage('en')}
+            >
+              EN
+            </button>
             <span>|</span>
-            <button className="hover:text-foreground transition-colors">VI</button>
+            <button
+              className={`hover:text-foreground transition-colors ${language === 'vi' ? 'text-foreground font-medium' : ''}`}
+              onClick={() => setLanguage('vi')}
+            >
+              VI
+            </button>
           </div>
         </div>
 
