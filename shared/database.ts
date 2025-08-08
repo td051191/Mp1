@@ -146,3 +146,29 @@ export interface CreateContentRequest {
 export interface UpdateContentRequest extends Partial<CreateContentRequest> {
   id: string;
 }
+
+// Authentication types
+export interface LoginRequest {
+  username: string;
+  password: string;
+}
+
+export interface LoginResponse {
+  success: boolean;
+  token?: string;
+  user?: {
+    id: string;
+    username: string;
+    fullName?: string;
+  };
+  message?: string;
+}
+
+export interface AuthVerifyResponse {
+  authenticated: boolean;
+  user?: {
+    id: string;
+    username: string;
+    fullName?: string;
+  };
+}
