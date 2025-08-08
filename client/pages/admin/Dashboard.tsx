@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { AdminLayout } from '@/components/AdminLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { productsApi, categoriesApi } from '@/lib/api';
+import { adminProductsApi, adminCategoriesApi } from '@/lib/admin-api';
 import { 
   Package, 
   FolderTree, 
