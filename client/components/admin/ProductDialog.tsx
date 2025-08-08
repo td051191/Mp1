@@ -105,9 +105,6 @@ export function ProductDialog({ product, open, onOpenChange, categories }: Produ
 
   const saveProduct = useMutation({
     mutationFn: async (data: any) => {
-      const url = product ? `/api/products/${product.id}` : '/api/products';
-      const method = product ? 'PUT' : 'POST';
-      
       const payload = {
         name: { en: data.name_en, vi: data.name_vi },
         description: { en: data.description_en, vi: data.description_vi },
@@ -130,17 +127,14 @@ export function ProductDialog({ product, open, onOpenChange, categories }: Produ
         }
       };
 
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) throw new Error('Failed to save product');
-      return response.json();
+      if (product) {
+        return adminProductsApi.update(product.id, payload);
+      } else {
+        return adminProductsApi.create(payload);
+      }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-products'] });
       onOpenChange(false);
     }
   });
