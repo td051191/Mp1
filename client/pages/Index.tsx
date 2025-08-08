@@ -278,9 +278,9 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">
-              {getContent('features_title', { 
-                en: 'Why Choose FreshMarket?', 
-                vi: 'Tại sao chọn FreshMarket?' 
+              {getContent('features_title', {
+                en: 'Why Choose Minh Phát?',
+                vi: 'Tại sao chọn Minh Phát?'
               })}
             </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
@@ -388,7 +388,7 @@ export default function Index() {
                 <div className="flex items-center justify-center w-8 h-8 bg-fresh-green rounded-full">
                   <Leaf className="w-4 h-4 text-white" />
                 </div>
-                <span className="text-xl font-bold text-primary">FreshMarket</span>
+                <span className="text-xl font-bold text-primary">Minh Phát</span>
               </div>
               <p className="text-muted-foreground mb-4">
                 {language === 'en'
@@ -449,7 +449,7 @@ export default function Index() {
               </h4>
               <div className="space-y-2 text-muted-foreground">
                 <p>📞 +1 (555) 123-4567</p>
-                <p>📧 hello@freshmarket.com</p>
+                <p>📧 hello@minhphat.com</p>
                 <p>📍 123 Farm Street, Fresh Valley</p>
               </div>
             </div>
@@ -457,7 +457,7 @@ export default function Index() {
           
           <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
             <p>
-              &copy; 2024 FreshMarket. {language === 'en' ? 'All rights reserved.' : 'Tất cả quyền được bảo lưu.'} | 
+              &copy; 2024 Minh Phát. {language === 'en' ? 'All rights reserved.' : 'Tất cả quyền được bảo lưu.'} | 
               <span className="mx-2">
                 {language === 'en' ? 'Privacy Policy' : 'Chính sách bảo mật'}
               </span> | 
