@@ -18,6 +18,7 @@ import Seasonal from "./pages/Seasonal";
 import Bundles from "./pages/Bundles";
 
 // Admin pages
+import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminProducts from "./pages/admin/Products";
 import AdminCategories from "./pages/admin/Categories";
