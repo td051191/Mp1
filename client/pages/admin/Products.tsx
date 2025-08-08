@@ -21,7 +21,7 @@ import {
   Loader2,
   Star
 } from 'lucide-react';
-import { productsApi, categoriesApi } from '@/lib/api';
+import { adminProductsApi, adminCategoriesApi } from '@/lib/admin-api';
 import { Product } from '@shared/api';
 import { ProductDialog } from '@/components/admin/ProductDialog';
 
