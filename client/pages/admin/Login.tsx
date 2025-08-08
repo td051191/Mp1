@@ -97,7 +97,7 @@ export default function AdminLogin() {
                   value={formData.username}
                   onChange={(e) => handleChange('username', e.target.value)}
                   placeholder="Enter your username"
-                  disabled={loginMutation.isPending}
+                  disabled={isSubmitting}
                   className="h-11"
                   autoComplete="username"
                   required
