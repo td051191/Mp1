@@ -170,6 +170,99 @@ class MemoryDatabase {
     return newsletter;
   }
 
+  // Admin Users
+  createAdminUser(username: string, password: string, fullName?: string, email?: string): AdminUser {
+    const id = this.generateId();
+    const passwordHash = crypto.createHash('md5').update(password).digest('hex');
+    const now = new Date();
+
+    const adminUser: AdminUser = {
+      id,
+      username,
+      passwordHash,
+      email,
+      fullName,
+      isActive: true,
+      createdAt: now,
+      updatedAt: now
+    };
+
+    this.adminUsers.set(id, adminUser);
+    return adminUser;
+  }
+
+  getAdminUserByUsername(username: string): AdminUser | undefined {
+    return Array.from(this.adminUsers.values()).find(user => user.username === username);
+  }
+
+  getAdminUserById(id: string): AdminUser | undefined {
+    return this.adminUsers.get(id);
+  }
+
+  updateAdminUserLastLogin(id: string): void {
+    const user = this.adminUsers.get(id);
+    if (user) {
+      user.lastLogin = new Date();
+      user.updatedAt = new Date();
+      this.adminUsers.set(id, user);
+    }
+  }
+
+  verifyAdminPassword(username: string, password: string): AdminUser | null {
+    const user = this.getAdminUserByUsername(username);
+    if (!user || !user.isActive) return null;
+
+    const passwordHash = crypto.createHash('md5').update(password).digest('hex');
+    if (user.passwordHash === passwordHash) {
+      return user;
+    }
+    return null;
+  }
+
+  // Admin Sessions
+  createAdminSession(userId: string): AdminSession {
+    const id = this.generateId();
+    const token = crypto.randomBytes(32).toString('hex');
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 24); // 24 hour expiry
+
+    const session: AdminSession = {
+      id,
+      userId,
+      token,
+      expiresAt,
+      createdAt: new Date()
+    };
+
+    this.adminSessions.set(token, session);
+    return session;
+  }
+
+  getAdminSession(token: string): AdminSession | undefined {
+    const session = this.adminSessions.get(token);
+    if (session && session.expiresAt > new Date()) {
+      return session;
+    }
+    // Clean up expired session
+    if (session) {
+      this.adminSessions.delete(token);
+    }
+    return undefined;
+  }
+
+  deleteAdminSession(token: string): boolean {
+    return this.adminSessions.delete(token);
+  }
+
+  cleanExpiredSessions(): void {
+    const now = new Date();
+    for (const [token, session] of this.adminSessions.entries()) {
+      if (session.expiresAt <= now) {
+        this.adminSessions.delete(token);
+      }
+    }
+  }
+
   // Utility
   private generateId(): string {
     return Date.now().toString(36) + Math.random().toString(36).substr(2);
