@@ -10,3 +10,6 @@
 export interface DemoResponse {
   message: string;
 }
+
+// Re-export database types for frontend use
+export * from './database';
