@@ -195,8 +195,8 @@ class MemoryDatabase {
         sortOrder: 2
       },
       {
-        name: { en: "Citrus", vi: "Citrus" },
-        description: { en: "Vitamin C packed citrus fruits", vi: "Trái cây citrus giàu vitamin C" },
+        name: { en: "Citrus", vi: "Trái cây họ cam chanh" },
+        description: { en: "Vitamin C packed citrus fruits", vi: "Trái cây họ cam chanh giàu vitamin C" },
         emoji: "🍋",
         color: "bg-fresh-yellow/10",
         slug: "citrus",
