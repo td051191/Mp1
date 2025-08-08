@@ -479,6 +479,14 @@ class MemoryDatabase {
         updatedAt: now
       });
     });
+
+    // Seed default admin user
+    this.createAdminUser('admin', 'admin123', 'Administrator', 'admin@minhphat.com');
+
+    // Clean expired sessions every hour
+    setInterval(() => {
+      this.cleanExpiredSessions();
+    }, 3600000);
   }
 }
 
