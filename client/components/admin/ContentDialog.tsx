@@ -58,9 +58,6 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
 
   const saveContent = useMutation({
     mutationFn: async (data: any) => {
-      const url = content ? `/api/content/${content.id}` : '/api/content';
-      const method = content ? 'PUT' : 'POST';
-      
       const payload = {
         key: data.key,
         value: { en: data.value_en, vi: data.value_vi },
@@ -68,20 +65,14 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
         section: data.section
       };
 
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to save content');
+      if (content) {
+        return adminContentApi.update(content.id, payload);
+      } else {
+        return adminContentApi.create(payload);
       }
-      return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['content'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-content'] });
       onOpenChange(false);
     }
   });
