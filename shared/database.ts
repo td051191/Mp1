@@ -60,6 +60,26 @@ export interface Newsletter {
   isActive: boolean;
 }
 
+export interface AdminUser {
+  id: string;
+  username: string;
+  passwordHash: string; // MD5 hash
+  email?: string;
+  fullName?: string;
+  isActive: boolean;
+  lastLogin?: Date;
+  createdAt: Date;
+  updatedAt: Date;
+}
+
+export interface AdminSession {
+  id: string;
+  userId: string;
+  token: string;
+  expiresAt: Date;
+  createdAt: Date;
+}
+
 // API Response types
 export interface ProductsResponse {
   products: Product[];
