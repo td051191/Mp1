@@ -9,6 +9,8 @@ class MemoryDatabase {
   private categories: Map<string, Category> = new Map();
   private content: Map<string, Content> = new Map();
   private newsletters: Map<string, Newsletter> = new Map();
+  private adminUsers: Map<string, AdminUser> = new Map();
+  private adminSessions: Map<string, AdminSession> = new Map();
 
   constructor() {
     this.seedData();
@@ -355,7 +357,7 @@ class MemoryDatabase {
         key: "hero_subtitle",
         value: { 
           en: "Farm-fresh fruits delivered to your doorstep. Support local farmers while enjoying the finest quality produce at unbeatable prices.", 
-          vi: "Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng thời thưởng thức sản phẩm chất lư���ng cao nhất với giá cả không thể cạnh tranh hơn." 
+          vi: "Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng thời thưởng thức sản phẩm chất lượng cao nhất với giá cả không thể cạnh tranh hơn." 
         },
         type: "text" as const,
         section: "hero"
