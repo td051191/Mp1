@@ -19,7 +19,7 @@ import {
   Loader2,
   FileText
 } from 'lucide-react';
-import { contentApi } from '@/lib/api';
+import { adminContentApi } from '@/lib/admin-api';
 import { Content } from '@shared/api';
 import { ContentDialog } from '@/components/admin/ContentDialog';
 
