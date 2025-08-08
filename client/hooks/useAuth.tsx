@@ -68,13 +68,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         credentials: 'include',
         body: JSON.stringify({ username, password }),
       });
-      
+
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
+        throw new Error(data.message || 'Wrong info');
       }
-      
-      return response.json();
+
+      return data;
     },
     onSuccess: (data) => {
       if (data.success && data.user) {
