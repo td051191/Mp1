@@ -32,13 +32,13 @@ export default function AdminProducts() {
   const queryClient = useQueryClient();
 
   const { data: productsData, isLoading } = useQuery({
-    queryKey: ['products', search],
-    queryFn: () => productsApi.getAll({ search: search || undefined, limit: 50 })
+    queryKey: ['admin-products', search],
+    queryFn: () => adminProductsApi.getAll({ search: search || undefined, limit: 50 })
   });
 
   const { data: categoriesData } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => categoriesApi.getAll()
+    queryKey: ['admin-categories'],
+    queryFn: () => adminCategoriesApi.getAll()
   });
 
   const deleteProduct = useMutation({
