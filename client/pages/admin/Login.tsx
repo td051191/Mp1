@@ -137,12 +137,12 @@ export default function AdminLogin() {
               </div>
 
               {/* Login Button */}
-              <Button 
-                type="submit" 
+              <Button
+                type="submit"
                 className="w-full h-11 bg-primary hover:bg-primary/90"
-                disabled={loginMutation.isPending}
+                disabled={isSubmitting}
               >
-                {loginMutation.isPending ? (
+                {isSubmitting ? (
                   <>
                     <Loader2 className="w-4 h-4 mr-2 animate-spin" />
                     Signing in...
