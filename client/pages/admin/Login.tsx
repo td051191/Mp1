@@ -114,7 +114,7 @@ export default function AdminLogin() {
                     value={formData.password}
                     onChange={(e) => handleChange('password', e.target.value)}
                     placeholder="Enter your password"
-                    disabled={loginMutation.isPending}
+                    disabled={isSubmitting}
                     className="h-11 pr-10"
                     autoComplete="current-password"
                     required
