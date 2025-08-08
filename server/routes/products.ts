@@ -111,7 +111,7 @@ export const createProduct: RequestHandler = (req, res) => {
       ...productData,
       rating: 0,
       reviews: 0,
-      inStock: true
+      inStock: productData.inStock !== undefined ? productData.inStock : true
     });
 
     res.status(201).json(newProduct);
