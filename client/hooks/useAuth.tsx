@@ -196,12 +196,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await logoutMutation.mutateAsync();
   };
 
+  const extendSession = () => {
+    resetIdleTimeout();
+  };
+
   const value: AuthContextType = {
     user,
     isAuthenticated: !!user,
     isLoading: isLoading || loginMutation.isPending || logoutMutation.isPending,
+    isWarningShown,
     login,
-    logout
+    logout,
+    extendSession
   };
 
   return (
