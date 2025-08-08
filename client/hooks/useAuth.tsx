@@ -20,7 +20,16 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
+  const [isWarningShown, setIsWarningShown] = useState(false);
   const queryClient = useQueryClient();
+
+  // Auto-logout configuration
+  const IDLE_TIMEOUT = 15 * 60 * 1000; // 15 minutes in milliseconds
+  const WARNING_TIME = 2 * 60 * 1000; // Show warning 2 minutes before logout
+
+  const activityTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const warningTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const lastActivityRef = useRef<number>(Date.now());
 
   // Verify authentication status
   const { data: authData, isLoading } = useQuery({
