@@ -89,5 +89,10 @@ export function createServer() {
   // Newsletter API
   app.post("/api/newsletter/subscribe", subscribeNewsletter);
 
+  // Authentication API
+  app.post("/api/auth/login", login);
+  app.post("/api/auth/logout", logout);
+  app.get("/api/auth/verify", verify);
+
   return app;
 }
