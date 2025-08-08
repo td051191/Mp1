@@ -55,6 +55,73 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [authData]);
 
+  // Reset idle timeout
+  const resetIdleTimeout = useCallback(() => {
+    if (!user) return; // Only track activity when user is logged in
+
+    lastActivityRef.current = Date.now();
+    setIsWarningShown(false);
+
+    // Clear existing timeouts
+    if (activityTimeoutRef.current) {
+      clearTimeout(activityTimeoutRef.current);
+    }
+    if (warningTimeoutRef.current) {
+      clearTimeout(warningTimeoutRef.current);
+    }
+
+    // Set warning timeout (show warning 2 minutes before logout)
+    warningTimeoutRef.current = setTimeout(() => {
+      setIsWarningShown(true);
+    }, IDLE_TIMEOUT - WARNING_TIME);
+
+    // Set logout timeout
+    activityTimeoutRef.current = setTimeout(() => {
+      console.log('Auto-logout due to inactivity');
+      logout();
+    }, IDLE_TIMEOUT);
+  }, [user, IDLE_TIMEOUT, WARNING_TIME]);
+
+  // Track user activity
+  const handleActivity = useCallback(() => {
+    resetIdleTimeout();
+  }, [resetIdleTimeout]);
+
+  // Set up activity listeners
+  useEffect(() => {
+    if (!user) return;
+
+    const events = [
+      'mousedown',
+      'mousemove',
+      'keypress',
+      'scroll',
+      'touchstart',
+      'click'
+    ];
+
+    // Add event listeners
+    events.forEach(event => {
+      document.addEventListener(event, handleActivity, true);
+    });
+
+    // Start the idle timeout
+    resetIdleTimeout();
+
+    // Cleanup
+    return () => {
+      events.forEach(event => {
+        document.removeEventListener(event, handleActivity, true);
+      });
+      if (activityTimeoutRef.current) {
+        clearTimeout(activityTimeoutRef.current);
+      }
+      if (warningTimeoutRef.current) {
+        clearTimeout(warningTimeoutRef.current);
+      }
+    };
+  }, [user, handleActivity, resetIdleTimeout]);
+
   // Load user from localStorage on mount
   useEffect(() => {
     const savedUser = localStorage.getItem('admin_user');
