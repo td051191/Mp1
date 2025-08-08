@@ -44,7 +44,7 @@ export function Header() {
               <Apple className="w-6 h-6 text-white" />
             </div>
             <span className="bg-gradient-to-r from-fresh-green to-fresh-lime bg-clip-text text-transparent">
-              FreshMarket
+              Minh Phát
             </span>
           </Link>
 
