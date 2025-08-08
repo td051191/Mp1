@@ -57,19 +57,19 @@ export function createServer() {
   app.put("/api/products/:id", updateProduct);
   app.delete("/api/products/:id", deleteProduct);
 
-  // Categories API routes
+  // Categories API routes (specific routes before parameterized ones)
+  app.get("/api/categories/slug/:slug", getCategoryBySlug);
   app.get("/api/categories", getCategories);
   app.get("/api/categories/:id", getCategoryById);
-  app.get("/api/categories/slug/:slug", getCategoryBySlug);
   app.post("/api/categories", createCategory);
   app.put("/api/categories/:id", updateCategory);
   app.delete("/api/categories/:id", deleteCategory);
 
-  // Content API routes (multilingual support)
-  app.get("/api/content", getContent);
-  app.get("/api/content/:id", getContentById);
+  // Content API routes (specific routes before parameterized ones)
   app.get("/api/content/key/:key", getContentByKey);
   app.get("/api/content/section/:section", getContentBySection);
+  app.get("/api/content", getContent);
+  app.get("/api/content/:id", getContentById);
   app.post("/api/content", createContent);
   app.put("/api/content/:id", updateContent);
   app.delete("/api/content/:id", deleteContent);
