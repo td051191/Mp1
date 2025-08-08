@@ -18,7 +18,7 @@ import {
   Trash2, 
   Loader2
 } from 'lucide-react';
-import { categoriesApi } from '@/lib/api';
+import { adminCategoriesApi } from '@/lib/admin-api';
 import { Category } from '@shared/api';
 import { CategoryDialog } from '@/components/admin/CategoryDialog';
 
