@@ -29,20 +29,14 @@ export default function AdminContent() {
   const queryClient = useQueryClient();
 
   const { data: contentData, isLoading } = useQuery({
-    queryKey: ['content'],
-    queryFn: () => contentApi.getAll()
+    queryKey: ['admin-content'],
+    queryFn: () => adminContentApi.getAll()
   });
 
   const deleteContent = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await fetch(`/api/content/${id}`, { method: 'DELETE' });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to delete content');
-      }
-    },
+    mutationFn: adminContentApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['content'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-content'] });
     }
   });
 
