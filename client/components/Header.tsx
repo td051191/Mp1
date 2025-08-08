@@ -144,35 +144,35 @@ export function Header() {
                 className="block py-2 text-foreground hover:text-primary font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Fruits
+                {language === 'en' ? 'Fruits' : 'Trái cây'}
               </Link>
               <Link
                 to="/vegetables"
                 className="block py-2 text-foreground hover:text-primary font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Vegetables
+                {language === 'en' ? 'Vegetables' : 'Rau củ'}
               </Link>
               <Link
                 to="/organic"
                 className="block py-2 text-foreground hover:text-primary font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Organic
+                {language === 'en' ? 'Organic' : 'Hữu cơ'}
               </Link>
               <Link
                 to="/seasonal"
                 className="block py-2 text-foreground hover:text-primary font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Seasonal
+                {language === 'en' ? 'Seasonal' : 'Theo mùa'}
               </Link>
               <Link
                 to="/bundles"
                 className="block py-2 text-foreground hover:text-primary font-medium transition-colors"
                 onClick={() => setIsMenuOpen(false)}
               >
-                Bundles
+                {language === 'en' ? 'Bundles' : 'Gói combo'}
               </Link>
             </nav>
             
