@@ -82,9 +82,6 @@ export function CategoryDialog({ category, open, onOpenChange }: CategoryDialogP
 
   const saveCategory = useMutation({
     mutationFn: async (data: any) => {
-      const url = category ? `/api/categories/${category.id}` : '/api/categories';
-      const method = category ? 'PUT' : 'POST';
-      
       const payload = {
         name: { en: data.name_en, vi: data.name_vi },
         description: { en: data.description_en, vi: data.description_vi },
@@ -95,20 +92,14 @@ export function CategoryDialog({ category, open, onOpenChange }: CategoryDialogP
         isActive: data.isActive
       };
 
-      const response = await fetch(url, {
-        method,
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to save category');
+      if (category) {
+        return adminCategoriesApi.update(category.id, payload);
+      } else {
+        return adminCategoriesApi.create(payload);
       }
-      return response.json();
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
       onOpenChange(false);
     }
   });
