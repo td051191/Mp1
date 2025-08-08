@@ -34,6 +34,13 @@ import {
   subscribeNewsletter
 } from "./routes/content";
 
+import {
+  login,
+  logout,
+  verify,
+  requireAuth
+} from "./routes/auth";
+
 export function createServer() {
   const app = express();
 
