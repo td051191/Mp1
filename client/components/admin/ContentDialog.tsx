@@ -19,6 +19,7 @@ import {
 } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
 import { Content } from '@shared/api';
+import { adminContentApi } from '@/lib/admin-api';
 
 interface ContentDialogProps {
   content: Content | null;
