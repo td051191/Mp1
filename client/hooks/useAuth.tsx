@@ -171,7 +171,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return response.json();
     },
     onSuccess: () => {
+      // Clear activity timeouts
+      if (activityTimeoutRef.current) {
+        clearTimeout(activityTimeoutRef.current);
+      }
+      if (warningTimeoutRef.current) {
+        clearTimeout(warningTimeoutRef.current);
+      }
+
       setUser(null);
+      setIsWarningShown(false);
       localStorage.removeItem('admin_user');
       queryClient.clear();
     }
