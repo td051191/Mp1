@@ -12,13 +12,13 @@ import {
 
 export default function AdminDashboard() {
   const { data: productsData, isLoading: loadingProducts } = useQuery({
-    queryKey: ['products'],
-    queryFn: () => productsApi.getAll({ limit: 100 })
+    queryKey: ['admin-products-dashboard'],
+    queryFn: () => adminProductsApi.getAll({ limit: 100 })
   });
 
   const { data: categoriesData, isLoading: loadingCategories } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => categoriesApi.getAll()
+    queryKey: ['admin-categories-dashboard'],
+    queryFn: () => adminCategoriesApi.getAll()
   });
 
   if (loadingProducts || loadingCategories) {
