@@ -361,7 +361,7 @@ class MemoryDatabase {
       },
       {
         key: "features_title",
-        value: { en: "Why Choose FreshMarket?", vi: "Tại sao chọn FreshMarket?" },
+        value: { en: "Why Choose Minh Phát?", vi: "Tại sao chọn Minh Phát?" },
         type: "text" as const,
         section: "features"
       },
