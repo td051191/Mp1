@@ -3,6 +3,36 @@ import express from "express";
 import cors from "cors";
 import { handleDemo } from "./routes/demo";
 
+// Import new database API routes
+import {
+  getProducts,
+  getProductById,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+  getProductsByCategory
+} from "./routes/products";
+
+import {
+  getCategories,
+  getCategoryById,
+  getCategoryBySlug,
+  createCategory,
+  updateCategory,
+  deleteCategory
+} from "./routes/categories";
+
+import {
+  getContent,
+  getContentById,
+  getContentByKey,
+  getContentBySection,
+  createContent,
+  updateContent,
+  deleteContent,
+  subscribeNewsletter
+} from "./routes/content";
+
 export function createServer() {
   const app = express();
 
@@ -11,13 +41,41 @@ export function createServer() {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
-  // Example API routes
+  // Legacy API routes
   app.get("/api/ping", (_req, res) => {
     const ping = process.env.PING_MESSAGE ?? "ping";
     res.json({ message: ping });
   });
 
   app.get("/api/demo", handleDemo);
+
+  // Products API routes
+  app.get("/api/products", getProducts);
+  app.get("/api/products/:id", getProductById);
+  app.post("/api/products", createProduct);
+  app.put("/api/products/:id", updateProduct);
+  app.delete("/api/products/:id", deleteProduct);
+  app.get("/api/products/category/:categoryId", getProductsByCategory);
+
+  // Categories API routes
+  app.get("/api/categories", getCategories);
+  app.get("/api/categories/:id", getCategoryById);
+  app.get("/api/categories/slug/:slug", getCategoryBySlug);
+  app.post("/api/categories", createCategory);
+  app.put("/api/categories/:id", updateCategory);
+  app.delete("/api/categories/:id", deleteCategory);
+
+  // Content API routes (multilingual support)
+  app.get("/api/content", getContent);
+  app.get("/api/content/:id", getContentById);
+  app.get("/api/content/key/:key", getContentByKey);
+  app.get("/api/content/section/:section", getContentBySection);
+  app.post("/api/content", createContent);
+  app.put("/api/content/:id", updateContent);
+  app.delete("/api/content/:id", deleteContent);
+
+  // Newsletter API
+  app.post("/api/newsletter/subscribe", subscribeNewsletter);
 
   return app;
 }
