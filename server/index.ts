@@ -49,13 +49,13 @@ export function createServer() {
 
   app.get("/api/demo", handleDemo);
 
-  // Products API routes
+  // Products API routes (specific routes before parameterized ones)
+  app.get("/api/products/category/:categoryId", getProductsByCategory);
   app.get("/api/products", getProducts);
   app.get("/api/products/:id", getProductById);
   app.post("/api/products", createProduct);
   app.put("/api/products/:id", updateProduct);
   app.delete("/api/products/:id", deleteProduct);
-  app.get("/api/products/category/:categoryId", getProductsByCategory);
 
   // Categories API routes
   app.get("/api/categories", getCategories);
