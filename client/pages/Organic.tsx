@@ -1,4 +1,4 @@
-import { PlaceholderPage } from './PlaceholderPage';
+import { PlaceholderPage } from "./PlaceholderPage";
 
 export default function Organic() {
   return (

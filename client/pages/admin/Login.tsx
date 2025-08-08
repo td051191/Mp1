@@ -1,20 +1,20 @@
-import { useState, useEffect } from 'react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Apple, Loader2, Eye, EyeOff } from 'lucide-react';
-import { LoginRequest, LoginResponse } from '@shared/api';
+import { useState, useEffect } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Apple, Loader2, Eye, EyeOff } from "lucide-react";
+import { LoginRequest, LoginResponse } from "@shared/api";
 
 export default function AdminLogin() {
   const [formData, setFormData] = useState({
-    username: '',
-    password: ''
+    username: "",
+    password: "",
   });
   const [showPassword, setShowPassword] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
   const { login, isAuthenticated, isLoading } = useAuth();
@@ -22,7 +22,7 @@ export default function AdminLogin() {
   // Redirect if already authenticated
   useEffect(() => {
     if (isAuthenticated) {
-      const from = (location.state as any)?.from?.pathname || '/admin';
+      const from = (location.state as any)?.from?.pathname || "/admin";
       navigate(from, { replace: true });
     }
   }, [isAuthenticated, navigate, location]);
@@ -31,28 +31,28 @@ export default function AdminLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setError('');
+    setError("");
 
     if (!formData.username || !formData.password) {
-      setError('Please enter both username and password');
+      setError("Please enter both username and password");
       return;
     }
 
     setIsSubmitting(true);
     try {
       await login(formData.username, formData.password);
-      const from = (location.state as any)?.from?.pathname || '/admin';
+      const from = (location.state as any)?.from?.pathname || "/admin";
       navigate(from, { replace: true });
     } catch (error: any) {
-      setError(error.message || 'Login failed');
+      setError(error.message || "Login failed");
     } finally {
       setIsSubmitting(false);
     }
   };
 
   const handleChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (error) setError(''); // Clear error when user starts typing
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (error) setError(""); // Clear error when user starts typing
   };
 
   return (
@@ -60,7 +60,10 @@ export default function AdminLogin() {
       <div className="w-full max-w-md">
         {/* Header */}
         <div className="text-center mb-8">
-          <Link to="/" className="inline-flex items-center gap-2 text-2xl font-bold text-primary hover:opacity-80 transition-opacity">
+          <Link
+            to="/"
+            className="inline-flex items-center gap-2 text-2xl font-bold text-primary hover:opacity-80 transition-opacity"
+          >
             <div className="flex items-center justify-center w-10 h-10 bg-fresh-green rounded-full">
               <Apple className="w-6 h-6 text-white" />
             </div>
@@ -68,7 +71,9 @@ export default function AdminLogin() {
               Minh Phát
             </span>
           </Link>
-          <h1 className="text-3xl font-bold text-foreground mt-4">Admin Login</h1>
+          <h1 className="text-3xl font-bold text-foreground mt-4">
+            Admin Login
+          </h1>
           <p className="text-muted-foreground mt-2">
             Sign in to access the admin panel
           </p>
@@ -95,7 +100,7 @@ export default function AdminLogin() {
                   id="username"
                   type="text"
                   value={formData.username}
-                  onChange={(e) => handleChange('username', e.target.value)}
+                  onChange={(e) => handleChange("username", e.target.value)}
                   placeholder="Enter your username"
                   disabled={isSubmitting}
                   className="h-11"
@@ -112,7 +117,7 @@ export default function AdminLogin() {
                     id="password"
                     type={showPassword ? "text" : "password"}
                     value={formData.password}
-                    onChange={(e) => handleChange('password', e.target.value)}
+                    onChange={(e) => handleChange("password", e.target.value)}
                     placeholder="Enter your password"
                     disabled={isSubmitting}
                     className="h-11 pr-10"
@@ -148,24 +153,30 @@ export default function AdminLogin() {
                     Signing in...
                   </>
                 ) : (
-                  'Sign in'
+                  "Sign in"
                 )}
               </Button>
             </form>
 
             {/* Demo Credentials */}
             <div className="mt-6 p-4 bg-muted/50 rounded-lg">
-              <h4 className="text-sm font-medium text-muted-foreground mb-2">Demo Credentials:</h4>
+              <h4 className="text-sm font-medium text-muted-foreground mb-2">
+                Demo Credentials:
+              </h4>
               <div className="text-sm space-y-1">
-                <div><strong>Username:</strong> admin</div>
-                <div><strong>Password:</strong> admin123</div>
+                <div>
+                  <strong>Username:</strong> admin
+                </div>
+                <div>
+                  <strong>Password:</strong> admin123
+                </div>
               </div>
             </div>
 
             {/* Back to Site */}
             <div className="mt-6 text-center">
-              <Link 
-                to="/" 
+              <Link
+                to="/"
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
                 ← Back to Minh Phát Store

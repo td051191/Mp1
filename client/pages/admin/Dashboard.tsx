@@ -1,24 +1,18 @@
-import { useQuery } from '@tanstack/react-query';
-import { AdminLayout } from '@/components/AdminLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { adminProductsApi, adminCategoriesApi } from '@/lib/admin-api';
-import { 
-  Package, 
-  FolderTree, 
-  TrendingUp, 
-  Users,
-  Loader2
-} from 'lucide-react';
+import { useQuery } from "@tanstack/react-query";
+import { AdminLayout } from "@/components/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { adminProductsApi, adminCategoriesApi } from "@/lib/admin-api";
+import { Package, FolderTree, TrendingUp, Users, Loader2 } from "lucide-react";
 
 export default function AdminDashboard() {
   const { data: productsData, isLoading: loadingProducts } = useQuery({
-    queryKey: ['admin-products-dashboard'],
-    queryFn: () => adminProductsApi.getAll({ limit: 100 })
+    queryKey: ["admin-products-dashboard"],
+    queryFn: () => adminProductsApi.getAll({ limit: 100 }),
   });
 
   const { data: categoriesData, isLoading: loadingCategories } = useQuery({
-    queryKey: ['admin-categories-dashboard'],
-    queryFn: () => adminCategoriesApi.getAll()
+    queryKey: ["admin-categories-dashboard"],
+    queryFn: () => adminCategoriesApi.getAll(),
   });
 
   if (loadingProducts || loadingCategories) {
@@ -33,29 +27,29 @@ export default function AdminDashboard() {
 
   const stats = [
     {
-      title: 'Total Products',
+      title: "Total Products",
       value: productsData?.total || 0,
       icon: Package,
-      description: 'Active products in store'
+      description: "Active products in store",
     },
     {
-      title: 'Categories',
+      title: "Categories",
       value: categoriesData?.categories?.length || 0,
       icon: FolderTree,
-      description: 'Product categories'
+      description: "Product categories",
     },
     {
-      title: 'Featured Products',
-      value: productsData?.products?.filter(p => p.badge).length || 0,
+      title: "Featured Products",
+      value: productsData?.products?.filter((p) => p.badge).length || 0,
       icon: TrendingUp,
-      description: 'Products with badges'
+      description: "Products with badges",
     },
     {
-      title: 'In Stock',
-      value: productsData?.products?.filter(p => p.inStock).length || 0,
+      title: "In Stock",
+      value: productsData?.products?.filter((p) => p.inStock).length || 0,
       icon: Users,
-      description: 'Available products'
-    }
+      description: "Available products",
+    },
   ];
 
   return (
@@ -96,16 +90,23 @@ export default function AdminDashboard() {
           <CardContent>
             <div className="space-y-4">
               {productsData?.products?.slice(0, 5).map((product) => (
-                <div key={product.id} className="flex items-center gap-4 p-3 border rounded-lg">
+                <div
+                  key={product.id}
+                  className="flex items-center gap-4 p-3 border rounded-lg"
+                >
                   <div className="text-4xl">{product.image}</div>
                   <div className="flex-1">
                     <h4 className="font-medium">{product.name.en}</h4>
-                    <p className="text-sm text-muted-foreground">{product.name.vi}</p>
+                    <p className="text-sm text-muted-foreground">
+                      {product.name.vi}
+                    </p>
                   </div>
                   <div className="text-right">
                     <div className="font-medium">${product.price}</div>
-                    <div className={`text-xs ${product.inStock ? 'text-green-600' : 'text-red-600'}`}>
-                      {product.inStock ? 'In Stock' : 'Out of Stock'}
+                    <div
+                      className={`text-xs ${product.inStock ? "text-green-600" : "text-red-600"}`}
+                    >
+                      {product.inStock ? "In Stock" : "Out of Stock"}
                     </div>
                   </div>
                 </div>

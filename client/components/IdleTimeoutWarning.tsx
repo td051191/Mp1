@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { useAuth } from '@/hooks/useAuth';
+import { useEffect, useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,9 +8,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
-import { Button } from '@/components/ui/button';
-import { Clock, LogOut } from 'lucide-react';
+} from "@/components/ui/alert-dialog";
+import { Button } from "@/components/ui/button";
+import { Clock, LogOut } from "lucide-react";
 
 export function IdleTimeoutWarning() {
   const { isWarningShown, extendSession, logout } = useAuth();
@@ -39,7 +39,7 @@ export function IdleTimeoutWarning() {
   const formatTime = (seconds: number) => {
     const mins = Math.floor(seconds / 60);
     const secs = seconds % 60;
-    return `${mins}:${secs.toString().padStart(2, '0')}`;
+    return `${mins}:${secs.toString().padStart(2, "0")}`;
   };
 
   const handleStayLoggedIn = () => {

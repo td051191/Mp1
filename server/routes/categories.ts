@@ -1,20 +1,24 @@
 import { RequestHandler } from "express";
 import { db } from "../database/memory-db";
-import { CategoriesResponse, CreateCategoryRequest, UpdateCategoryRequest } from "@shared/database";
+import {
+  CategoriesResponse,
+  CreateCategoryRequest,
+  UpdateCategoryRequest,
+} from "@shared/database";
 
 // GET /api/categories - Get all categories
 export const getCategories: RequestHandler = (req, res) => {
   try {
-    const categories = db.getAllCategories().filter(c => c.isActive);
-    
+    const categories = db.getAllCategories().filter((c) => c.isActive);
+
     const response: CategoriesResponse = {
-      categories
+      categories,
     };
 
     res.json(response);
   } catch (error) {
-    console.error('Error fetching categories:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error fetching categories:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -25,13 +29,13 @@ export const getCategoryById: RequestHandler = (req, res) => {
     const category = db.getCategoryById(id);
 
     if (!category || !category.isActive) {
-      return res.status(404).json({ error: 'Category not found' });
+      return res.status(404).json({ error: "Category not found" });
     }
 
     res.json(category);
   } catch (error) {
-    console.error('Error fetching category:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error fetching category:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -42,20 +46,20 @@ export const getCategoryBySlug: RequestHandler = (req, res) => {
     const category = db.getCategoryBySlug(slug);
 
     if (!category || !category.isActive) {
-      return res.status(404).json({ error: 'Category not found' });
+      return res.status(404).json({ error: "Category not found" });
     }
 
     // Get products count for this category
     const products = db.getProductsByCategory(category.id);
     const categoryWithCount = {
       ...category,
-      count: products.filter(p => p.inStock).length
+      count: products.filter((p) => p.inStock).length,
     };
 
     res.json(categoryWithCount);
   } catch (error) {
-    console.error('Error fetching category by slug:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error fetching category by slug:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -66,29 +70,31 @@ export const createCategory: RequestHandler = (req, res) => {
 
     // Validate required fields
     if (!categoryData.name?.en || !categoryData.name?.vi) {
-      return res.status(400).json({ error: 'Category name in both languages is required' });
+      return res
+        .status(400)
+        .json({ error: "Category name in both languages is required" });
     }
 
     if (!categoryData.slug) {
-      return res.status(400).json({ error: 'Category slug is required' });
+      return res.status(400).json({ error: "Category slug is required" });
     }
 
     // Check if slug already exists
     const existingCategory = db.getCategoryBySlug(categoryData.slug);
     if (existingCategory) {
-      return res.status(400).json({ error: 'Category slug already exists' });
+      return res.status(400).json({ error: "Category slug already exists" });
     }
 
     // Create category with defaults
     const newCategory = db.createCategory({
       ...categoryData,
-      isActive: true
+      isActive: true,
     });
 
     res.status(201).json(newCategory);
   } catch (error) {
-    console.error('Error creating category:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error creating category:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -102,20 +108,20 @@ export const updateCategory: RequestHandler = (req, res) => {
     if (updates.slug) {
       const existingCategory = db.getCategoryBySlug(updates.slug);
       if (existingCategory && existingCategory.id !== id) {
-        return res.status(400).json({ error: 'Category slug already exists' });
+        return res.status(400).json({ error: "Category slug already exists" });
       }
     }
 
     const updatedCategory = db.updateCategory(id, updates);
 
     if (!updatedCategory) {
-      return res.status(404).json({ error: 'Category not found' });
+      return res.status(404).json({ error: "Category not found" });
     }
 
     res.json(updatedCategory);
   } catch (error) {
-    console.error('Error updating category:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error updating category:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -123,24 +129,25 @@ export const updateCategory: RequestHandler = (req, res) => {
 export const deleteCategory: RequestHandler = (req, res) => {
   try {
     const { id } = req.params;
-    
+
     // Check if category has products
     const products = db.getProductsByCategory(id);
     if (products.length > 0) {
-      return res.status(400).json({ 
-        error: 'Cannot delete category with existing products. Move or delete products first.' 
+      return res.status(400).json({
+        error:
+          "Cannot delete category with existing products. Move or delete products first.",
       });
     }
 
     const deleted = db.deleteCategory(id);
 
     if (!deleted) {
-      return res.status(404).json({ error: 'Category not found' });
+      return res.status(404).json({ error: "Category not found" });
     }
 
     res.status(204).send();
   } catch (error) {
-    console.error('Error deleting category:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Error deleting category:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

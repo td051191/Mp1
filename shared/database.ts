@@ -46,7 +46,7 @@ export interface Content {
   id: string;
   key: string; // unique identifier like 'hero_title', 'footer_text', etc.
   value: { en: string; vi: string };
-  type: 'text' | 'html' | 'markdown';
+  type: "text" | "html" | "markdown";
   section: string; // 'hero', 'footer', 'features', etc.
   createdAt: Date;
   updatedAt: Date;
@@ -55,7 +55,7 @@ export interface Content {
 export interface Newsletter {
   id: string;
   email: string;
-  language: 'en' | 'vi';
+  language: "en" | "vi";
   subscribedAt: Date;
   isActive: boolean;
 }
@@ -139,7 +139,7 @@ export interface UpdateCategoryRequest extends Partial<CreateCategoryRequest> {
 export interface CreateContentRequest {
   key: string;
   value: { en: string; vi: string };
-  type: 'text' | 'html' | 'markdown';
+  type: "text" | "html" | "markdown";
   section: string;
 }
 

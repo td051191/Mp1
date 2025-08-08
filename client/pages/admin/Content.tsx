@@ -1,27 +1,21 @@
-import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { AdminLayout } from '@/components/AdminLayout';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { 
+import { useState } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { AdminLayout } from "@/components/AdminLayout";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { 
-  Plus, 
-  Edit2, 
-  Trash2, 
-  Loader2,
-  FileText
-} from 'lucide-react';
-import { adminContentApi } from '@/lib/admin-api';
-import { Content } from '@shared/api';
-import { ContentDialog } from '@/components/admin/ContentDialog';
+} from "@/components/ui/table";
+import { Plus, Edit2, Trash2, Loader2, FileText } from "lucide-react";
+import { adminContentApi } from "@/lib/admin-api";
+import { Content } from "@shared/api";
+import { ContentDialog } from "@/components/admin/ContentDialog";
 
 export default function AdminContent() {
   const [selectedContent, setSelectedContent] = useState<Content | null>(null);
@@ -29,15 +23,15 @@ export default function AdminContent() {
   const queryClient = useQueryClient();
 
   const { data: contentData, isLoading } = useQuery({
-    queryKey: ['admin-content'],
-    queryFn: () => adminContentApi.getAll()
+    queryKey: ["admin-content"],
+    queryFn: () => adminContentApi.getAll(),
   });
 
   const deleteContent = useMutation({
     mutationFn: adminContentApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-content'] });
-    }
+      queryClient.invalidateQueries({ queryKey: ["admin-content"] });
+    },
   });
 
   const handleEdit = (content: Content) => {
@@ -55,26 +49,36 @@ export default function AdminContent() {
       try {
         await deleteContent.mutateAsync(id);
       } catch (error) {
-        alert(error instanceof Error ? error.message : 'Failed to delete content');
+        alert(
+          error instanceof Error ? error.message : "Failed to delete content",
+        );
       }
     }
   };
 
   // Group content by section
-  const contentBySection = contentData?.content.reduce((acc, content) => {
-    if (!acc[content.section]) {
-      acc[content.section] = [];
-    }
-    acc[content.section].push(content);
-    return acc;
-  }, {} as Record<string, Content[]>) || {};
+  const contentBySection =
+    contentData?.content.reduce(
+      (acc, content) => {
+        if (!acc[content.section]) {
+          acc[content.section] = [];
+        }
+        acc[content.section].push(content);
+        return acc;
+      },
+      {} as Record<string, Content[]>,
+    ) || {};
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'text': return 'bg-blue-100 text-blue-800';
-      case 'html': return 'bg-green-100 text-green-800';
-      case 'markdown': return 'bg-purple-100 text-purple-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "text":
+        return "bg-blue-100 text-blue-800";
+      case "html":
+        return "bg-green-100 text-green-800";
+      case "markdown":
+        return "bg-purple-100 text-purple-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
@@ -83,7 +87,9 @@ export default function AdminContent() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-3xl font-bold tracking-tight">Content Management</h2>
+            <h2 className="text-3xl font-bold tracking-tight">
+              Content Management
+            </h2>
             <p className="text-muted-foreground">
               Manage multilingual content for your website
             </p>
@@ -131,17 +137,25 @@ export default function AdminContent() {
                           </code>
                         </TableCell>
                         <TableCell>
-                          <div className="max-w-xs truncate" title={content.value.en}>
+                          <div
+                            className="max-w-xs truncate"
+                            title={content.value.en}
+                          >
                             {content.value.en}
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className="max-w-xs truncate" title={content.value.vi}>
+                          <div
+                            className="max-w-xs truncate"
+                            title={content.value.vi}
+                          >
                             {content.value.vi}
                           </div>
                         </TableCell>
                         <TableCell>
-                          <span className={`px-2 py-1 rounded-full text-xs ${getTypeColor(content.type)}`}>
+                          <span
+                            className={`px-2 py-1 rounded-full text-xs ${getTypeColor(content.type)}`}
+                          >
                             {content.type}
                           </span>
                         </TableCell>
@@ -157,7 +171,9 @@ export default function AdminContent() {
                             <Button
                               variant="ghost"
                               size="sm"
-                              onClick={() => handleDelete(content.id, content.key)}
+                              onClick={() =>
+                                handleDelete(content.id, content.key)
+                              }
                               disabled={deleteContent.isPending}
                             >
                               <Trash2 className="w-4 h-4" />

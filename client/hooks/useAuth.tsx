@@ -1,6 +1,14 @@
-import { createContext, useContext, useState, useEffect, ReactNode, useRef, useCallback } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { AuthVerifyResponse } from '@shared/api';
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+  useRef,
+  useCallback,
+} from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { AuthVerifyResponse } from "@shared/api";
 
 interface User {
   id: string;
@@ -35,25 +43,25 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Verify authentication status
   const { data: authData, isLoading } = useQuery({
-    queryKey: ['auth-verify'],
+    queryKey: ["auth-verify"],
     queryFn: async (): Promise<AuthVerifyResponse> => {
-      const response = await fetch('/api/auth/verify', {
-        credentials: 'include'
+      const response = await fetch("/api/auth/verify", {
+        credentials: "include",
       });
       return response.json();
     },
     retry: false,
-    refetchOnWindowFocus: false
+    refetchOnWindowFocus: false,
   });
 
   // Update user state when auth data changes
   useEffect(() => {
     if (authData?.authenticated && authData.user) {
       setUser(authData.user);
-      localStorage.setItem('admin_user', JSON.stringify(authData.user));
+      localStorage.setItem("admin_user", JSON.stringify(authData.user));
     } else {
       setUser(null);
-      localStorage.removeItem('admin_user');
+      localStorage.removeItem("admin_user");
     }
   }, [authData]);
 
@@ -79,7 +87,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Set logout timeout
     activityTimeoutRef.current = setTimeout(() => {
-      console.log('Auto-logout due to inactivity');
+      console.log("Auto-logout due to inactivity");
       logout();
     }, IDLE_TIMEOUT);
   }, [user, IDLE_TIMEOUT, WARNING_TIME]);
@@ -94,16 +102,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (!user) return;
 
     const events = [
-      'mousedown',
-      'mousemove',
-      'keypress',
-      'scroll',
-      'touchstart',
-      'click'
+      "mousedown",
+      "mousemove",
+      "keypress",
+      "scroll",
+      "touchstart",
+      "click",
     ];
 
     // Add event listeners
-    events.forEach(event => {
+    events.forEach((event) => {
       document.addEventListener(event, handleActivity, true);
     });
 
@@ -112,7 +120,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     // Cleanup
     return () => {
-      events.forEach(event => {
+      events.forEach((event) => {
         document.removeEventListener(event, handleActivity, true);
       });
       if (activityTimeoutRef.current) {
@@ -126,31 +134,37 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Load user from localStorage on mount
   useEffect(() => {
-    const savedUser = localStorage.getItem('admin_user');
+    const savedUser = localStorage.getItem("admin_user");
     if (savedUser) {
       try {
         setUser(JSON.parse(savedUser));
       } catch (error) {
-        localStorage.removeItem('admin_user');
+        localStorage.removeItem("admin_user");
       }
     }
   }, []);
 
   const loginMutation = useMutation({
-    mutationFn: async ({ username, password }: { username: string; password: string }) => {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
+    mutationFn: async ({
+      username,
+      password,
+    }: {
+      username: string;
+      password: string;
+    }) => {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
-        credentials: 'include',
+        credentials: "include",
         body: JSON.stringify({ username, password }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || 'Wrong info');
+        throw new Error(data.message || "Wrong info");
       }
 
       return data;
@@ -158,17 +172,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     onSuccess: (data) => {
       if (data.success && data.user) {
         setUser(data.user);
-        localStorage.setItem('admin_user', JSON.stringify(data.user));
-        queryClient.invalidateQueries({ queryKey: ['auth-verify'] });
+        localStorage.setItem("admin_user", JSON.stringify(data.user));
+        queryClient.invalidateQueries({ queryKey: ["auth-verify"] });
       }
-    }
+    },
   });
 
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      const response = await fetch('/api/auth/logout', {
-        method: 'POST',
-        credentials: 'include'
+      const response = await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
       });
       return response.json();
     },
@@ -183,9 +197,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       setUser(null);
       setIsWarningShown(false);
-      localStorage.removeItem('admin_user');
+      localStorage.removeItem("admin_user");
       queryClient.clear();
-    }
+    },
   });
 
   const login = async (username: string, password: string) => {
@@ -207,20 +221,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isWarningShown,
     login,
     logout,
-    extendSession
+    extendSession,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
 }

@@ -12,4 +12,4 @@ export interface DemoResponse {
 }
 
 // Re-export database types for frontend use
-export * from './database';
+export * from "./database";

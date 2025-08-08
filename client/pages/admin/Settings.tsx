@@ -1,16 +1,16 @@
-import { AdminLayout } from '@/components/AdminLayout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { 
-  Settings as SettingsIcon, 
-  Globe, 
+import { AdminLayout } from "@/components/AdminLayout";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import {
+  Settings as SettingsIcon,
+  Globe,
   Palette,
   Database,
-  Shield
-} from 'lucide-react';
+  Shield,
+} from "lucide-react";
 
 export default function AdminSettings() {
   return (
@@ -42,7 +42,7 @@ export default function AdminSettings() {
                 <Input defaultValue="Minh Phát" />
               </div>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div>
                 <Label>Contact Email</Label>
@@ -73,7 +73,9 @@ export default function AdminSettings() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Default Language</Label>
-                <p className="text-sm text-muted-foreground">The primary language for your store</p>
+                <p className="text-sm text-muted-foreground">
+                  The primary language for your store
+                </p>
               </div>
               <select className="border rounded px-3 py-2">
                 <option value="en">English</option>
@@ -84,7 +86,9 @@ export default function AdminSettings() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Enable Vietnamese</Label>
-                <p className="text-sm text-muted-foreground">Allow customers to switch to Vietnamese</p>
+                <p className="text-sm text-muted-foreground">
+                  Allow customers to switch to Vietnamese
+                </p>
               </div>
               <Switch defaultChecked />
             </div>
@@ -114,7 +118,9 @@ export default function AdminSettings() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Dark Mode</Label>
-                <p className="text-sm text-muted-foreground">Enable dark theme for admin panel</p>
+                <p className="text-sm text-muted-foreground">
+                  Enable dark theme for admin panel
+                </p>
               </div>
               <Switch />
             </div>
@@ -124,7 +130,9 @@ export default function AdminSettings() {
               <div className="flex items-center gap-2 mt-2">
                 <div className="w-8 h-8 bg-fresh-green rounded border"></div>
                 <Input defaultValue="#16a34a" className="w-32" />
-                <span className="text-sm text-muted-foreground">Fresh Green</span>
+                <span className="text-sm text-muted-foreground">
+                  Fresh Green
+                </span>
               </div>
             </div>
           </CardContent>
@@ -142,15 +150,21 @@ export default function AdminSettings() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Database Type</Label>
-                <p className="text-sm text-muted-foreground">Currently using in-memory database</p>
+                <p className="text-sm text-muted-foreground">
+                  Currently using in-memory database
+                </p>
               </div>
-              <span className="text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">In-Memory</span>
+              <span className="text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
+                In-Memory
+              </span>
             </div>
 
             <div className="flex items-center justify-between">
               <div>
                 <Label>Auto Backup</Label>
-                <p className="text-sm text-muted-foreground">Automatically backup data daily</p>
+                <p className="text-sm text-muted-foreground">
+                  Automatically backup data daily
+                </p>
               </div>
               <Switch defaultChecked />
             </div>
@@ -174,7 +188,9 @@ export default function AdminSettings() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>Admin Authentication</Label>
-                <p className="text-sm text-muted-foreground">Require login for admin panel</p>
+                <p className="text-sm text-muted-foreground">
+                  Require login for admin panel
+                </p>
               </div>
               <Switch />
             </div>
@@ -182,7 +198,9 @@ export default function AdminSettings() {
             <div className="flex items-center justify-between">
               <div>
                 <Label>API Rate Limiting</Label>
-                <p className="text-sm text-muted-foreground">Limit API requests per minute</p>
+                <p className="text-sm text-muted-foreground">
+                  Limit API requests per minute
+                </p>
               </div>
               <Switch defaultChecked />
             </div>

@@ -11,7 +11,7 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
-  getProductsByCategory
+  getProductsByCategory,
 } from "./routes/products";
 
 import {
@@ -20,7 +20,7 @@ import {
   getCategoryBySlug,
   createCategory,
   updateCategory,
-  deleteCategory
+  deleteCategory,
 } from "./routes/categories";
 
 import {
@@ -31,24 +31,21 @@ import {
   createContent,
   updateContent,
   deleteContent,
-  subscribeNewsletter
+  subscribeNewsletter,
 } from "./routes/content";
 
-import {
-  login,
-  logout,
-  verify,
-  requireAuth
-} from "./routes/auth";
+import { login, logout, verify, requireAuth } from "./routes/auth";
 
 export function createServer() {
   const app = express();
 
   // Middleware
-  app.use(cors({
-    origin: true,
-    credentials: true
-  }));
+  app.use(
+    cors({
+      origin: true,
+      credentials: true,
+    }),
+  );
   app.use(cookieParser());
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));

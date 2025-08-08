@@ -1,25 +1,25 @@
-import { useState, useEffect } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useState, useEffect } from "react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+} from "@/components/ui/dialog";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Loader2 } from 'lucide-react';
-import { Content } from '@shared/api';
-import { adminContentApi } from '@/lib/admin-api';
+} from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
+import { Content } from "@shared/api";
+import { adminContentApi } from "@/lib/admin-api";
 
 interface ContentDialogProps {
   content: Content | null;
@@ -27,14 +27,18 @@ interface ContentDialogProps {
   onOpenChange: (open: boolean) => void;
 }
 
-export function ContentDialog({ content, open, onOpenChange }: ContentDialogProps) {
+export function ContentDialog({
+  content,
+  open,
+  onOpenChange,
+}: ContentDialogProps) {
   const queryClient = useQueryClient();
   const [formData, setFormData] = useState({
-    key: '',
-    value_en: '',
-    value_vi: '',
-    type: 'text' as 'text' | 'html' | 'markdown',
-    section: ''
+    key: "",
+    value_en: "",
+    value_vi: "",
+    type: "text" as "text" | "html" | "markdown",
+    section: "",
   });
 
   useEffect(() => {
@@ -44,15 +48,15 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
         value_en: content.value.en,
         value_vi: content.value.vi,
         type: content.type,
-        section: content.section
+        section: content.section,
       });
     } else {
       setFormData({
-        key: '',
-        value_en: '',
-        value_vi: '',
-        type: 'text',
-        section: ''
+        key: "",
+        value_en: "",
+        value_vi: "",
+        type: "text",
+        section: "",
       });
     }
   }, [content]);
@@ -63,7 +67,7 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
         key: data.key,
         value: { en: data.value_en, vi: data.value_vi },
         type: data.type,
-        section: data.section
+        section: data.section,
       };
 
       if (content) {
@@ -73,9 +77,9 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
       }
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['admin-content'] });
+      queryClient.invalidateQueries({ queryKey: ["admin-content"] });
       onOpenChange(false);
-    }
+    },
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -84,17 +88,17 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
   };
 
   const handleChange = (field: string, value: any) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const sectionOptions = [
-    { value: 'hero', label: 'Hero Section' },
-    { value: 'features', label: 'Features Section' },
-    { value: 'newsletter', label: 'Newsletter Section' },
-    { value: 'footer', label: 'Footer Section' },
-    { value: 'about', label: 'About Section' },
-    { value: 'contact', label: 'Contact Section' },
-    { value: 'general', label: 'General' }
+    { value: "hero", label: "Hero Section" },
+    { value: "features", label: "Features Section" },
+    { value: "newsletter", label: "Newsletter Section" },
+    { value: "footer", label: "Footer Section" },
+    { value: "about", label: "About Section" },
+    { value: "contact", label: "Contact Section" },
+    { value: "general", label: "General" },
   ];
 
   return (
@@ -102,7 +106,7 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
       <DialogContent className="max-w-2xl">
         <DialogHeader>
           <DialogTitle>
-            {content ? 'Edit Content' : 'Add New Content'}
+            {content ? "Edit Content" : "Add New Content"}
           </DialogTitle>
         </DialogHeader>
 
@@ -113,7 +117,7 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
               <Label>Key (unique identifier)</Label>
               <Input
                 value={formData.key}
-                onChange={(e) => handleChange('key', e.target.value)}
+                onChange={(e) => handleChange("key", e.target.value)}
                 placeholder="e.g., hero_title"
                 required
               />
@@ -123,7 +127,10 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
             </div>
             <div>
               <Label>Section</Label>
-              <Select value={formData.section} onValueChange={(value) => handleChange('section', value)}>
+              <Select
+                value={formData.section}
+                onValueChange={(value) => handleChange("section", value)}
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select section" />
                 </SelectTrigger>
@@ -141,7 +148,10 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
           {/* Type */}
           <div>
             <Label>Content Type</Label>
-            <Select value={formData.type} onValueChange={(value) => handleChange('type', value)}>
+            <Select
+              value={formData.type}
+              onValueChange={(value) => handleChange("type", value)}
+            >
               <SelectTrigger>
                 <SelectValue />
               </SelectTrigger>
@@ -157,10 +167,10 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
           <div className="space-y-4">
             <div>
               <Label>Content (English)</Label>
-              {formData.type === 'text' ? (
+              {formData.type === "text" ? (
                 <Textarea
                   value={formData.value_en}
-                  onChange={(e) => handleChange('value_en', e.target.value)}
+                  onChange={(e) => handleChange("value_en", e.target.value)}
                   placeholder="Enter English content..."
                   rows={4}
                   required
@@ -168,8 +178,12 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
               ) : (
                 <Textarea
                   value={formData.value_en}
-                  onChange={(e) => handleChange('value_en', e.target.value)}
-                  placeholder={formData.type === 'html' ? 'Enter HTML content...' : 'Enter Markdown content...'}
+                  onChange={(e) => handleChange("value_en", e.target.value)}
+                  placeholder={
+                    formData.type === "html"
+                      ? "Enter HTML content..."
+                      : "Enter Markdown content..."
+                  }
                   rows={6}
                   required
                   className="font-mono text-sm"
@@ -179,10 +193,10 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
 
             <div>
               <Label>Content (Vietnamese)</Label>
-              {formData.type === 'text' ? (
+              {formData.type === "text" ? (
                 <Textarea
                   value={formData.value_vi}
-                  onChange={(e) => handleChange('value_vi', e.target.value)}
+                  onChange={(e) => handleChange("value_vi", e.target.value)}
                   placeholder="Enter Vietnamese content..."
                   rows={4}
                   required
@@ -190,8 +204,12 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
               ) : (
                 <Textarea
                   value={formData.value_vi}
-                  onChange={(e) => handleChange('value_vi', e.target.value)}
-                  placeholder={formData.type === 'html' ? 'Enter HTML content...' : 'Enter Markdown content...'}
+                  onChange={(e) => handleChange("value_vi", e.target.value)}
+                  placeholder={
+                    formData.type === "html"
+                      ? "Enter HTML content..."
+                      : "Enter Markdown content..."
+                  }
                   rows={6}
                   required
                   className="font-mono text-sm"
@@ -207,13 +225,17 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
               <div className="mt-2 space-y-2">
                 {formData.value_en && (
                   <div>
-                    <div className="text-xs text-muted-foreground">English:</div>
+                    <div className="text-xs text-muted-foreground">
+                      English:
+                    </div>
                     <div className="text-sm">{formData.value_en}</div>
                   </div>
                 )}
                 {formData.value_vi && (
                   <div>
-                    <div className="text-xs text-muted-foreground">Vietnamese:</div>
+                    <div className="text-xs text-muted-foreground">
+                      Vietnamese:
+                    </div>
                     <div className="text-sm">{formData.value_vi}</div>
                   </div>
                 )}
@@ -223,12 +245,18 @@ export function ContentDialog({ content, open, onOpenChange }: ContentDialogProp
 
           {/* Actions */}
           <div className="flex justify-end gap-3">
-            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => onOpenChange(false)}
+            >
               Cancel
             </Button>
             <Button type="submit" disabled={saveContent.isPending}>
-              {saveContent.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-              {content ? 'Update' : 'Create'} Content
+              {saveContent.isPending && (
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+              )}
+              {content ? "Update" : "Create"} Content
             </Button>
           </div>
         </form>
