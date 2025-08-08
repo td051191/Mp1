@@ -141,12 +141,6 @@ export default function Index() {
                     {language === 'en' ? 'Quality Guarantee' : 'Bảo đảm chất lượng'}
                   </span>
                 </div>
-                <div className="flex items-center gap-2">
-                  <Clock className="w-5 h-5 text-fresh-green" />
-                  <span className="font-medium">
-                    {language === 'en' ? 'Same Day' : 'Trong ngày'}
-                  </span>
-                </div>
               </div>
             </div>
             
@@ -170,7 +164,7 @@ export default function Index() {
             <p className="text-muted-foreground max-w-2xl mx-auto">
               {language === 'en' 
                 ? 'Discover our wide selection of fresh produce, carefully sourced from local farms'
-                : 'Khám phá lựa chọn đa dạng của chúng tôi về nông sản tươi, được lựa chọn cẩn thận từ các trang trại địa phương'
+                : 'Khám phá lựa chọn đa dạng của chúng tôi về nông s��n tươi, được lựa chọn cẩn thận từ các trang trại địa phương'
               }
             </p>
           </div>
