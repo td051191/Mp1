@@ -42,12 +42,9 @@ export default function AdminProducts() {
   });
 
   const deleteProduct = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await fetch(`/api/products/${id}`, { method: 'DELETE' });
-      if (!response.ok) throw new Error('Failed to delete product');
-    },
+    mutationFn: adminProductsApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['products'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-products'] });
     }
   });
 
