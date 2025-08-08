@@ -15,6 +15,14 @@ import Organic from "./pages/Organic";
 import Seasonal from "./pages/Seasonal";
 import Bundles from "./pages/Bundles";
 
+// Admin pages
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminProducts from "./pages/admin/Products";
+import AdminCategories from "./pages/admin/Categories";
+import AdminContent from "./pages/admin/Content";
+import AdminNewsletter from "./pages/admin/Newsletter";
+import AdminSettings from "./pages/admin/Settings";
+
 const queryClient = new QueryClient();
 
 const App = () => (
