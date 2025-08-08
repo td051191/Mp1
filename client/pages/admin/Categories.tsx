@@ -28,20 +28,14 @@ export default function AdminCategories() {
   const queryClient = useQueryClient();
 
   const { data: categoriesData, isLoading } = useQuery({
-    queryKey: ['categories'],
-    queryFn: () => categoriesApi.getAll()
+    queryKey: ['admin-categories'],
+    queryFn: () => adminCategoriesApi.getAll()
   });
 
   const deleteCategory = useMutation({
-    mutationFn: async (id: string) => {
-      const response = await fetch(`/api/categories/${id}`, { method: 'DELETE' });
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to delete category');
-      }
-    },
+    mutationFn: adminCategoriesApi.delete,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['categories'] });
+      queryClient.invalidateQueries({ queryKey: ['admin-categories'] });
     }
   });
 
