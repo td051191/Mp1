@@ -46,6 +46,9 @@ export function AdminLayout({ children }: AdminLayoutProps) {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Idle Timeout Warning */}
+      <IdleTimeoutWarning />
+
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div 
