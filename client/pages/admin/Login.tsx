@@ -16,40 +16,18 @@ export default function AdminLogin() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login, isAuthenticated, isLoading } = useAuth();
 
-  const loginMutation = useMutation({
-    mutationFn: async (data: LoginRequest): Promise<LoginResponse> => {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        credentials: 'include',
-        body: JSON.stringify(data),
-      });
-      
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'Login failed');
-      }
-      
-      return response.json();
-    },
-    onSuccess: (data) => {
-      if (data.success) {
-        // Store user info in localStorage for persistence
-        if (data.user) {
-          localStorage.setItem('admin_user', JSON.stringify(data.user));
-        }
-        navigate('/admin');
-      } else {
-        setError(data.message || 'Login failed');
-      }
-    },
-    onError: (error: Error) => {
-      setError(error.message);
+  // Redirect if already authenticated
+  useEffect(() => {
+    if (isAuthenticated) {
+      const from = (location.state as any)?.from?.pathname || '/admin';
+      navigate(from, { replace: true });
     }
-  });
+  }, [isAuthenticated, navigate, location]);
+
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
