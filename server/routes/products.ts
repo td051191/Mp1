@@ -44,8 +44,11 @@ export const getProducts: RequestHandler = (req, res) => {
       );
     }
 
-    // Filter only in-stock products
-    products = products.filter(p => p.inStock);
+    // Filter only in-stock products for public API (skip for admin)
+    const isAdminRequest = req.headers['x-admin'] === 'true';
+    if (!isAdminRequest) {
+      products = products.filter(p => p.inStock);
+    }
 
     // Pagination
     const pageNum = parseInt(page as string);
