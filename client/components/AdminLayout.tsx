@@ -1,17 +1,27 @@
 import { useState } from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Package, 
-  FolderTree, 
-  FileText, 
-  Users, 
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import {
+  LayoutDashboard,
+  Package,
+  FolderTree,
+  FileText,
+  Users,
   Settings,
   Menu,
   X,
-  Apple
+  Apple,
+  LogOut,
+  User
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { useAuth } from '@/hooks/useAuth';
 import { cn } from '@/lib/utils';
 
 interface AdminLayoutProps {
