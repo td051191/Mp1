@@ -82,7 +82,14 @@ export function Header() {
                 3
               </span>
             </Button>
-            
+
+            {/* Admin Panel */}
+            <Button variant="ghost" size="icon" className="hidden sm:flex" asChild>
+              <Link to="/admin">
+                <Users className="w-5 h-5" />
+              </Link>
+            </Button>
+
             {/* Shopping cart */}
             <Button variant="ghost" size="icon" className="relative">
               <ShoppingCart className="w-5 h-5" />
