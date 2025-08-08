@@ -1,7 +1,8 @@
 // In-memory database for the fruit e-commerce platform
 // In production, this would be replaced with a real database like PostgreSQL
 
-import { Product, Category, Content, Newsletter } from '@shared/database';
+import { Product, Category, Content, Newsletter, AdminUser, AdminSession } from '@shared/database';
+import crypto from 'crypto';
 
 class MemoryDatabase {
   private products: Map<string, Product> = new Map();
@@ -354,7 +355,7 @@ class MemoryDatabase {
         key: "hero_subtitle",
         value: { 
           en: "Farm-fresh fruits delivered to your doorstep. Support local farmers while enjoying the finest quality produce at unbeatable prices.", 
-          vi: "Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng thời thưởng thức sản phẩm chất lượng cao nhất với giá cả không thể cạnh tranh hơn." 
+          vi: "Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng thời thưởng thức sản phẩm chất lư���ng cao nhất với giá cả không thể cạnh tranh hơn." 
         },
         type: "text" as const,
         section: "hero"
