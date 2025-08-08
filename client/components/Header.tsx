@@ -15,9 +15,13 @@ export function Header() {
         {/* Top bar */}
         <div className="flex items-center justify-between py-2 text-sm text-muted-foreground border-b border-border/50">
           <div className="flex items-center gap-4">
-            <span>Free delivery on orders over $50</span>
+            <span>
+              {language === 'en' ? 'Free delivery on orders over $50' : 'Miễn phí giao hàng cho đơn hàng trên $50'}
+            </span>
             <span className="hidden md:inline">•</span>
-            <span className="hidden md:inline">Fresh daily delivery</span>
+            <span className="hidden md:inline">
+              {language === 'en' ? 'Fresh daily delivery' : 'Giao hàng tươi hàng ngày'}
+            </span>
           </div>
           <div className="flex items-center gap-4">
             <button
