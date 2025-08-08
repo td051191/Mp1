@@ -1,8 +1,12 @@
+import { useQuery } from '@tanstack/react-query';
 import { Header } from '@/components/Header';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Link } from 'react-router-dom';
+import { useLanguage } from '@/hooks/useLanguage';
+import { productsApi, categoriesApi, contentApi, newsletterApi } from '@/lib/api';
+import { useState } from 'react';
 import { 
   ShoppingCart, 
   Star, 
@@ -12,65 +16,79 @@ import {
   Clock,
   ArrowRight,
   Heart,
-  Plus
+  Plus,
+  Loader2
 } from 'lucide-react';
 
 export default function Index() {
-  const featuredProducts = [
-    {
-      id: 1,
-      name: "Organic Strawberries",
-      price: 4.99,
-      originalPrice: 6.99,
-      image: "🍓",
-      rating: 4.8,
-      reviews: 127,
-      badge: "Organic",
-      badgeColor: "bg-fresh-green"
-    },
-    {
-      id: 2,
-      name: "Fresh Bananas",
-      price: 2.49,
-      originalPrice: null,
-      image: "🍌",
-      rating: 4.6,
-      reviews: 89,
-      badge: "Popular",
-      badgeColor: "bg-fresh-yellow"
-    },
-    {
-      id: 3,
-      name: "Honeycrisp Apples",
-      price: 3.99,
-      originalPrice: 4.99,
-      image: "🍎",
-      rating: 4.9,
-      reviews: 203,
-      badge: "Premium",
-      badgeColor: "bg-fresh-red"
-    },
-    {
-      id: 4,
-      name: "Fresh Oranges",
-      price: 3.49,
-      originalPrice: null,
-      image: "🍊",
-      rating: 4.7,
-      reviews: 156,
-      badge: "Vitamin C",
-      badgeColor: "bg-fresh-orange"
-    }
-  ];
+  const { language, t } = useLanguage();
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [isSubscribing, setIsSubscribing] = useState(false);
 
-  const categories = [
-    { name: "Tropical Fruits", emoji: "🥭", count: "25+ varieties", color: "bg-fresh-orange/10" },
-    { name: "Berries", emoji: "🫐", count: "15+ varieties", color: "bg-fresh-purple/10" },
-    { name: "Citrus", emoji: "🍋", count: "12+ varieties", color: "bg-fresh-yellow/10" },
-    { name: "Stone Fruits", emoji: "🍑", count: "18+ varieties", color: "bg-fresh-red/10" },
-    { name: "Organic", emoji: "🌱", count: "50+ varieties", color: "bg-fresh-green/10" },
-    { name: "Exotic", emoji: "🥥", count: "20+ varieties", color: "bg-fresh-lime/10" }
-  ];
+  // Fetch data from database
+  const { data: productsData, isLoading: loadingProducts } = useQuery({
+    queryKey: ['products', 'featured'],
+    queryFn: () => productsApi.getFeatured(4)
+  });
+
+  const { data: categoriesData, isLoading: loadingCategories } = useQuery({
+    queryKey: ['categories'],
+    queryFn: () => categoriesApi.getAll()
+  });
+
+  const { data: heroContent } = useQuery({
+    queryKey: ['content', 'hero'],
+    queryFn: () => contentApi.getBySection('hero')
+  });
+
+  const { data: featuresContent } = useQuery({
+    queryKey: ['content', 'features'],
+    queryFn: () => contentApi.getBySection('features')
+  });
+
+  const { data: newsletterContent } = useQuery({
+    queryKey: ['content', 'newsletter'],
+    queryFn: () => contentApi.getBySection('newsletter')
+  });
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+
+    setIsSubscribing(true);
+    try {
+      await newsletterApi.subscribe(newsletterEmail, language);
+      setNewsletterEmail('');
+      alert(language === 'en' ? 'Successfully subscribed!' : 'Đăng ký thành công!');
+    } catch (error) {
+      alert(language === 'en' ? 'Failed to subscribe. Please try again.' : 'Đăng ký thất bại. Vui lòng thử lại.');
+    } finally {
+      setIsSubscribing(false);
+    }
+  };
+
+  // Get translated content with fallbacks
+  const getContent = (key: string, fallback: { en: string; vi: string }) => {
+    const content = heroContent?.content.find(c => c.key === key) || 
+                   featuresContent?.content.find(c => c.key === key) ||
+                   newsletterContent?.content.find(c => c.key === key);
+    return content ? t(content.value) : t(fallback);
+  };
+
+  const featuredProducts = productsData?.products || [];
+  const categories = categoriesData?.categories || [];
+
+  // Loading state
+  if (loadingProducts || loadingCategories) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Header />
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Loader2 className="w-8 h-8 animate-spin text-primary" />
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -82,24 +100,30 @@ export default function Index() {
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <div className="space-y-8">
               <div className="space-y-4">
-                <Badge className="bg-fresh-green text-white">🌱 100% Fresh & Organic</Badge>
+                <Badge className="bg-fresh-green text-white">
+                  🌱 {language === 'en' ? '100% Fresh & Organic' : '100% Tươi & Hữu cơ'}
+                </Badge>
                 <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                  Fresh Fruits
-                  <span className="block text-fresh-green">Delivered Daily</span>
+                  {getContent('hero_title', { en: 'Fresh Fruits', vi: 'Trái cây tươi' })}
+                  <span className="block text-fresh-green">
+                    {language === 'en' ? 'Delivered Daily' : 'Giao hàng hàng ngày'}
+                  </span>
                 </h1>
                 <p className="text-xl text-muted-foreground">
-                  Farm-fresh fruits delivered to your doorstep. Support local farmers while enjoying 
-                  the finest quality produce at unbeatable prices.
+                  {getContent('hero_subtitle', { 
+                    en: 'Farm-fresh fruits delivered to your doorstep. Support local farmers while enjoying the finest quality produce at unbeatable prices.',
+                    vi: 'Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng thời thưởng thức sản phẩm chất lượng cao nhất với giá cả không thể cạnh tranh hơn.'
+                  })}
                 </p>
               </div>
               
               <div className="flex flex-col sm:flex-row gap-4">
                 <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
                   <ShoppingCart className="w-5 h-5 mr-2" />
-                  Shop Now
+                  {language === 'en' ? 'Shop Now' : 'Mua ngay'}
                 </Button>
                 <Button variant="outline" size="lg">
-                  Learn More
+                  {language === 'en' ? 'Learn More' : 'Tìm hiểu thêm'}
                   <ArrowRight className="w-5 h-5 ml-2" />
                 </Button>
               </div>
@@ -107,15 +131,21 @@ export default function Index() {
               <div className="flex items-center gap-8 pt-4">
                 <div className="flex items-center gap-2">
                   <Truck className="w-5 h-5 text-fresh-green" />
-                  <span className="font-medium">Free Delivery</span>
+                  <span className="font-medium">
+                    {language === 'en' ? 'Free Delivery' : 'Miễn phí giao hàng'}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Shield className="w-5 h-5 text-fresh-green" />
-                  <span className="font-medium">Quality Guarantee</span>
+                  <span className="font-medium">
+                    {language === 'en' ? 'Quality Guarantee' : 'Bảo đảm chất lượng'}
+                  </span>
                 </div>
                 <div className="flex items-center gap-2">
                   <Clock className="w-5 h-5 text-fresh-green" />
-                  <span className="font-medium">Same Day</span>
+                  <span className="font-medium">
+                    {language === 'en' ? 'Same Day' : 'Trong ngày'}
+                  </span>
                 </div>
               </div>
             </div>
@@ -134,21 +164,28 @@ export default function Index() {
       <section className="py-16 bg-secondary/30">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Shop by Category</h2>
+            <h2 className="text-3xl font-bold mb-4">
+              {language === 'en' ? 'Shop by Category' : 'Mua theo danh mục'}
+            </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              Discover our wide selection of fresh produce, carefully sourced from local farms
+              {language === 'en' 
+                ? 'Discover our wide selection of fresh produce, carefully sourced from local farms'
+                : 'Khám phá lựa chọn đa dạng của chúng tôi về nông sản tươi, được lựa chọn cẩn thận từ các trang trại địa phương'
+              }
             </p>
           </div>
           
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
-            {categories.map((category, index) => (
-              <Card key={index} className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-0">
+            {categories.slice(0, 6).map((category) => (
+              <Card key={category.id} className="group hover:shadow-lg transition-all duration-300 cursor-pointer border-0">
                 <CardContent className="p-6 text-center">
                   <div className={`w-16 h-16 ${category.color} rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}>
                     <span className="text-2xl">{category.emoji}</span>
                   </div>
-                  <h3 className="font-semibold mb-1">{category.name}</h3>
-                  <p className="text-sm text-muted-foreground">{category.count}</p>
+                  <h3 className="font-semibold mb-1">{t(category.name)}</h3>
+                  <p className="text-sm text-muted-foreground">
+                    {category.count}+ {language === 'en' ? 'varieties' : 'loại'}
+                  </p>
                 </CardContent>
               </Card>
             ))}
@@ -161,11 +198,18 @@ export default function Index() {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between mb-12">
             <div>
-              <h2 className="text-3xl font-bold mb-4">Featured Products</h2>
-              <p className="text-muted-foreground">Hand-picked fresh fruits at the best prices</p>
+              <h2 className="text-3xl font-bold mb-4">
+                {language === 'en' ? 'Featured Products' : 'Sản phẩm nổi bật'}
+              </h2>
+              <p className="text-muted-foreground">
+                {language === 'en' 
+                  ? 'Hand-picked fresh fruits at the best prices'
+                  : 'Trái cây tươi được chọn lọc với giá tốt nhất'
+                }
+              </p>
             </div>
             <Button variant="outline">
-              View All
+              {language === 'en' ? 'View All' : 'Xem tất cả'}
               <ArrowRight className="w-4 h-4 ml-2" />
             </Button>
           </div>
@@ -175,9 +219,11 @@ export default function Index() {
               <Card key={product.id} className="group hover:shadow-xl transition-all duration-300 border-0 bg-card">
                 <CardContent className="p-0">
                   <div className="relative p-6 text-center bg-gradient-to-br from-secondary/20 to-secondary/5">
-                    <Badge className={`absolute top-3 left-3 ${product.badgeColor} text-white`}>
-                      {product.badge}
-                    </Badge>
+                    {product.badge && (
+                      <Badge className={`absolute top-3 left-3 ${product.badgeColor} text-white`}>
+                        {t(product.badge)}
+                      </Badge>
+                    )}
                     <Button 
                       variant="ghost" 
                       size="icon" 
@@ -189,7 +235,7 @@ export default function Index() {
                   </div>
                   
                   <div className="p-6">
-                    <h3 className="font-semibold text-lg mb-2">{product.name}</h3>
+                    <h3 className="font-semibold text-lg mb-2">{t(product.name)}</h3>
                     
                     <div className="flex items-center gap-1 mb-3">
                       <div className="flex items-center">
@@ -210,12 +256,14 @@ export default function Index() {
                           <span className="text-muted-foreground line-through">${product.originalPrice}</span>
                         )}
                       </div>
-                      <span className="text-sm text-muted-foreground">per lb</span>
+                      <span className="text-sm text-muted-foreground">
+                        {language === 'en' ? `per ${product.unit}` : `mỗi ${product.unit}`}
+                      </span>
                     </div>
                     
                     <Button className="w-full bg-primary hover:bg-primary/90 text-primary-foreground">
                       <Plus className="w-4 h-4 mr-2" />
-                      Add to Cart
+                      {language === 'en' ? 'Add to Cart' : 'Thêm vào giỏ'}
                     </Button>
                   </div>
                 </CardContent>
@@ -229,9 +277,17 @@ export default function Index() {
       <section className="py-16 bg-fresh-green/5">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl font-bold mb-4">Why Choose FreshMarket?</h2>
+            <h2 className="text-3xl font-bold mb-4">
+              {getContent('features_title', { 
+                en: 'Why Choose FreshMarket?', 
+                vi: 'Tại sao chọn FreshMarket?' 
+              })}
+            </h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
-              We're committed to delivering the freshest produce while supporting sustainable farming
+              {language === 'en'
+                ? 'We\'re committed to delivering the freshest produce while supporting sustainable farming'
+                : 'Chúng tôi cam kết cung cấp những sản phẩm tươi nhất đồng thời hỗ trợ nông nghiệp bền vững'
+              }
             </p>
           </div>
           
@@ -240,9 +296,14 @@ export default function Index() {
               <div className="w-16 h-16 bg-fresh-green rounded-full flex items-center justify-center mx-auto mb-6">
                 <Leaf className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">100% Organic</h3>
+              <h3 className="text-xl font-semibold mb-3">
+                {language === 'en' ? '100% Organic' : '100% Hữu cơ'}
+              </h3>
               <p className="text-muted-foreground">
-                All our products are certified organic, grown without harmful pesticides or chemicals
+                {language === 'en'
+                  ? 'All our products are certified organic, grown without harmful pesticides or chemicals'
+                  : 'Tất cả sản phẩm của chúng tôi đều được chứng nhận hữu cơ, trồng không có thuốc trừ sâu hoặc hóa chất có hại'
+                }
               </p>
             </div>
             
@@ -250,9 +311,14 @@ export default function Index() {
               <div className="w-16 h-16 bg-fresh-orange rounded-full flex items-center justify-center mx-auto mb-6">
                 <Truck className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Fast Delivery</h3>
+              <h3 className="text-xl font-semibold mb-3">
+                {language === 'en' ? 'Fast Delivery' : 'Giao hàng nhanh'}
+              </h3>
               <p className="text-muted-foreground">
-                Same-day delivery available. Fresh from farm to your table in hours, not days
+                {language === 'en'
+                  ? 'Same-day delivery available. Fresh from farm to your table in hours, not days'
+                  : 'Có giao hàng trong ngày. Tươi từ trang trại đến bàn của bạn trong vài giờ, không phải vài ngày'
+                }
               </p>
             </div>
             
@@ -260,9 +326,14 @@ export default function Index() {
               <div className="w-16 h-16 bg-fresh-red rounded-full flex items-center justify-center mx-auto mb-6">
                 <Shield className="w-8 h-8 text-white" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Quality Guarantee</h3>
+              <h3 className="text-xl font-semibold mb-3">
+                {language === 'en' ? 'Quality Guarantee' : 'Bảo đảm chất lượng'}
+              </h3>
               <p className="text-muted-foreground">
-                Not satisfied? We'll replace or refund your order, no questions asked
+                {language === 'en'
+                  ? 'Not satisfied? We\'ll replace or refund your order, no questions asked'
+                  : 'Không hài lòng? Chúng tôi sẽ thay thế hoặc hoàn tiền đơn hàng của bạn, không cần hỏi'
+                }
               </p>
             </div>
           </div>
@@ -272,20 +343,39 @@ export default function Index() {
       {/* Newsletter */}
       <section className="py-16 bg-gradient-to-r from-fresh-green to-fresh-lime">
         <div className="container mx-auto px-4 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">Stay Fresh with Our Newsletter</h2>
+          <h2 className="text-3xl font-bold text-white mb-4">
+            {getContent('newsletter_title', { 
+              en: 'Stay Fresh with Our Newsletter', 
+              vi: 'Luôn cập nhật với Bản tin của chúng tôi' 
+            })}
+          </h2>
           <p className="text-white/90 mb-8 max-w-2xl mx-auto">
-            Get weekly updates on seasonal fruits, exclusive offers, and healthy recipes delivered to your inbox
+            {language === 'en'
+              ? 'Get weekly updates on seasonal fruits, exclusive offers, and healthy recipes delivered to your inbox'
+              : 'Nhận cập nhật hàng tuần về trái cây theo mùa, ưu đãi độc quyền và công thức nấu ăn lành mạnh được gửi đến hộp thư của bạn'
+            }
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+          <form onSubmit={handleNewsletterSubmit} className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
             <input 
               type="email" 
-              placeholder="Enter your email"
+              value={newsletterEmail}
+              onChange={(e) => setNewsletterEmail(e.target.value)}
+              placeholder={language === 'en' ? 'Enter your email' : 'Nhập email của bạn'}
               className="flex-1 px-4 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white"
+              required
             />
-            <Button className="bg-white text-fresh-green hover:bg-white/90">
-              Subscribe
+            <Button 
+              type="submit" 
+              disabled={isSubscribing}
+              className="bg-white text-fresh-green hover:bg-white/90"
+            >
+              {isSubscribing ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                language === 'en' ? 'Subscribe' : 'Đăng ký'
+              )}
             </Button>
-          </div>
+          </form>
         </div>
       </section>
 
@@ -301,7 +391,10 @@ export default function Index() {
                 <span className="text-xl font-bold text-primary">FreshMarket</span>
               </div>
               <p className="text-muted-foreground mb-4">
-                Fresh, organic produce delivered daily to your doorstep.
+                {language === 'en'
+                  ? 'Fresh, organic produce delivered daily to your doorstep.'
+                  : 'Nông sản tươi, hữu cơ được giao hàng hàng ngày đến tận nhà bạn.'
+                }
               </p>
               <div className="flex gap-4">
                 <Button variant="ghost" size="icon">📘</Button>
@@ -311,27 +404,49 @@ export default function Index() {
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Shop</h4>
+              <h4 className="font-semibold mb-4">
+                {language === 'en' ? 'Shop' : 'Mua sắm'}
+              </h4>
               <div className="space-y-2">
-                <Link to="/fruits" className="block text-muted-foreground hover:text-foreground">Fruits</Link>
-                <Link to="/vegetables" className="block text-muted-foreground hover:text-foreground">Vegetables</Link>
-                <Link to="/organic" className="block text-muted-foreground hover:text-foreground">Organic</Link>
-                <Link to="/bundles" className="block text-muted-foreground hover:text-foreground">Bundles</Link>
+                <Link to="/fruits" className="block text-muted-foreground hover:text-foreground">
+                  {language === 'en' ? 'Fruits' : 'Trái cây'}
+                </Link>
+                <Link to="/vegetables" className="block text-muted-foreground hover:text-foreground">
+                  {language === 'en' ? 'Vegetables' : 'Rau củ'}
+                </Link>
+                <Link to="/organic" className="block text-muted-foreground hover:text-foreground">
+                  {language === 'en' ? 'Organic' : 'Hữu cơ'}
+                </Link>
+                <Link to="/bundles" className="block text-muted-foreground hover:text-foreground">
+                  {language === 'en' ? 'Bundles' : 'Gói combo'}
+                </Link>
               </div>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Support</h4>
+              <h4 className="font-semibold mb-4">
+                {language === 'en' ? 'Support' : 'Hỗ trợ'}
+              </h4>
               <div className="space-y-2">
-                <a href="#" className="block text-muted-foreground hover:text-foreground">Contact Us</a>
-                <a href="#" className="block text-muted-foreground hover:text-foreground">FAQ</a>
-                <a href="#" className="block text-muted-foreground hover:text-foreground">Shipping Info</a>
-                <a href="#" className="block text-muted-foreground hover:text-foreground">Returns</a>
+                <a href="#" className="block text-muted-foreground hover:text-foreground">
+                  {language === 'en' ? 'Contact Us' : 'Liên hệ'}
+                </a>
+                <a href="#" className="block text-muted-foreground hover:text-foreground">
+                  {language === 'en' ? 'FAQ' : 'Câu hỏi thường gặp'}
+                </a>
+                <a href="#" className="block text-muted-foreground hover:text-foreground">
+                  {language === 'en' ? 'Shipping Info' : 'Thông tin giao hàng'}
+                </a>
+                <a href="#" className="block text-muted-foreground hover:text-foreground">
+                  {language === 'en' ? 'Returns' : 'Đổi trả'}
+                </a>
               </div>
             </div>
             
             <div>
-              <h4 className="font-semibold mb-4">Contact</h4>
+              <h4 className="font-semibold mb-4">
+                {language === 'en' ? 'Contact' : 'Liên hệ'}
+              </h4>
               <div className="space-y-2 text-muted-foreground">
                 <p>📞 +1 (555) 123-4567</p>
                 <p>📧 hello@freshmarket.com</p>
@@ -341,7 +456,15 @@ export default function Index() {
           </div>
           
           <div className="border-t border-border mt-8 pt-8 text-center text-muted-foreground">
-            <p>&copy; 2024 FreshMarket. All rights reserved. | Privacy Policy | Terms of Service</p>
+            <p>
+              &copy; 2024 FreshMarket. {language === 'en' ? 'All rights reserved.' : 'Tất cả quyền được bảo lưu.'} | 
+              <span className="mx-2">
+                {language === 'en' ? 'Privacy Policy' : 'Chính sách bảo mật'}
+              </span> | 
+              <span className="mx-2">
+                {language === 'en' ? 'Terms of Service' : 'Điều khoản dịch vụ'}
+              </span>
+            </p>
           </div>
         </div>
       </footer>
