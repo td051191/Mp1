@@ -22,6 +22,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
+import { IdleTimeoutWarning } from '@/components/IdleTimeoutWarning';
 import { cn } from '@/lib/utils';
 
 interface AdminLayoutProps {
