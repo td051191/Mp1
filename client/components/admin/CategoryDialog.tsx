@@ -20,6 +20,7 @@ import {
 import { Switch } from '@/components/ui/switch';
 import { Loader2 } from 'lucide-react';
 import { Category } from '@shared/api';
+import { adminCategoriesApi } from '@/lib/admin-api';
 
 interface CategoryDialogProps {
   category: Category | null;
