@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ShoppingCart, User, Search, Menu, X, Heart, Apple } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
+import { useLanguage } from '@/hooks/useLanguage';
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
