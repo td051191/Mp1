@@ -225,22 +225,29 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       username: string;
       password: string;
     }) => {
-      const response = await fetch("/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify({ username, password }),
-      });
+      try {
+        const response = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          credentials: "include",
+          body: JSON.stringify({ username, password }),
+        });
 
-      const data = await response.json();
+        const data = await response.json();
 
-      if (!response.ok) {
-        throw new Error(data.message || "Wrong info");
+        if (!response.ok) {
+          throw new Error(data.message || "Wrong info");
+        }
+
+        return data;
+      } catch (error) {
+        if (error instanceof Error) {
+          throw error;
+        }
+        throw new Error("Network error - please check your connection");
       }
-
-      return data;
     },
     onSuccess: (data) => {
       if (data.success && data.user) {
