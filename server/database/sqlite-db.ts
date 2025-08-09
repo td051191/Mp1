@@ -26,10 +26,9 @@ class SQLiteDatabase {
         console.error("Error opening database:", err);
       } else {
         console.log("Connected to SQLite database");
+        this.initializeDatabase();
       }
     });
-
-    this.initializeDatabase();
   }
 
   private async initializeDatabase() {
