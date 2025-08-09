@@ -57,6 +57,7 @@ export const adminProductsApi = {
   getById: async (id: string): Promise<Product> => {
     const response = await fetch(`${API_BASE}/products/${id}`, {
       headers: { "x-admin": "true" },
+      credentials: 'include'
     });
     if (!response.ok) throw new Error("Failed to fetch product");
     return response.json();
