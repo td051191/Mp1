@@ -5,14 +5,17 @@ import { db } from "../database/sqlite-db";
 export const login: RequestHandler = async (req, res) => {
   try {
     const { username, password } = req.body;
+    console.log(`Login attempt: username="${username}", password="${password}"`);
 
     // Validate input
     if (!username || !password) {
+      console.log("Missing username or password");
       return res.status(400).json({ error: "Username and password are required" });
     }
 
     // Validate credentials
     const user = await db.validateAdminUser(username, password);
+    console.log("Validation result:", user ? "SUCCESS" : "FAILED");
     if (!user) {
       return res.status(401).json({ error: "Wrong info" });
     }
