@@ -18,7 +18,10 @@
     "start": "node dist/server/node-build.mjs",
     "test": "vitest --run",
     "format.fix": "prettier --write .",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "db:backup": "node scripts/backup-database.js backup",
+    "db:restore": "node scripts/backup-database.js restore",
+    "db:list": "node scripts/backup-database.js list"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.9",
