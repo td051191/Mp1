@@ -45,10 +45,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const { data: authData, isLoading } = useQuery({
     queryKey: ["auth-verify"],
     queryFn: async (): Promise<AuthVerifyResponse> => {
-      const response = await fetch("/api/auth/verify", {
-        credentials: "include",
-      });
-      return response.json();
+      try {
+        const response = await fetch("/api/auth/verify", {
+          credentials: "include",
+        });
+        if (!response.ok) {
+          return { authenticated: false };
+        }
+        return response.json();
+      } catch (error) {
+        console.error("Auth verification failed:", error);
+        return { authenticated: false };
+      }
     },
     retry: false,
     refetchOnWindowFocus: false,
