@@ -98,6 +98,7 @@ export const adminProductsApi = {
     const response = await fetch(`${API_BASE}/products/${id}`, {
       method: "DELETE",
       headers: { "x-admin": "true" },
+      credentials: 'include'
     });
     if (!response.ok) {
       const error = await response.json();
