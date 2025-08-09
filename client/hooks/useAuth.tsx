@@ -65,6 +65,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [authData]);
 
+  // Create a ref to store the logout function so we can call it from timeouts
+  const logoutRef = useRef<(() => Promise<void>) | null>(null);
+
   // Reset idle timeout
   const resetIdleTimeout = useCallback(() => {
     if (!user) return; // Only track activity when user is logged in
@@ -89,12 +92,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     activityTimeoutRef.current = setTimeout(async () => {
       console.log("Auto-logout due to inactivity");
       try {
-        await logoutMutation.mutateAsync();
+        if (logoutRef.current) {
+          await logoutRef.current();
+        }
       } catch (error) {
         console.error("Error during auto-logout:", error);
       }
     }, IDLE_TIMEOUT);
-  }, [user, IDLE_TIMEOUT, WARNING_TIME, logoutMutation]);
+  }, [user, IDLE_TIMEOUT, WARNING_TIME]);
 
   // Track user activity
   const handleActivity = useCallback(() => {
