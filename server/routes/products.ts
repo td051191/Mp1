@@ -7,7 +7,7 @@ import {
 } from "@shared/database";
 
 // GET /api/products - Get all products with optional filtering
-export const getProducts: RequestHandler = (req, res) => {
+export const getProducts: RequestHandler = async (req, res) => {
   try {
     const {
       category,
@@ -19,7 +19,7 @@ export const getProducts: RequestHandler = (req, res) => {
       search,
     } = req.query;
 
-    let products = db.getAllProducts();
+    let products = await db.getAllProducts();
 
     // Apply filters
     if (category && typeof category === "string") {
@@ -27,15 +27,15 @@ export const getProducts: RequestHandler = (req, res) => {
     }
 
     if (featured === "true") {
-      products = db.getFeaturedProducts(parseInt(limit as string));
+      products = await db.getFeaturedProducts(parseInt(limit as string));
     }
 
     if (organic === "true") {
-      products = products.filter((p) => p.isOrganic);
+      products = products.filter((p) => p.organic);
     }
 
     if (seasonal === "true") {
-      products = products.filter((p) => p.isSeasonal);
+      products = products.filter((p) => p.seasonal);
     }
 
     if (search && typeof search === "string") {
@@ -77,10 +77,10 @@ export const getProducts: RequestHandler = (req, res) => {
 };
 
 // GET /api/products/:id - Get product by ID
-export const getProductById: RequestHandler = (req, res) => {
+export const getProductById: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = db.getProductById(id);
+    const product = await db.getProductById(id);
 
     if (!product) {
       return res.status(404).json({ error: "Product not found" });
@@ -94,7 +94,7 @@ export const getProductById: RequestHandler = (req, res) => {
 };
 
 // POST /api/products - Create new product (admin only)
-export const createProduct: RequestHandler = (req, res) => {
+export const createProduct: RequestHandler = async (req, res) => {
   try {
     const productData: CreateProductRequest = req.body;
 
@@ -114,10 +114,10 @@ export const createProduct: RequestHandler = (req, res) => {
     }
 
     // Create product with defaults
-    const newProduct = db.createProduct({
+    const newProduct = await db.createProduct({
       ...productData,
       rating: 0,
-      reviews: 0,
+      reviewsCount: 0,
       inStock: productData.inStock !== undefined ? productData.inStock : true,
     });
 
@@ -129,12 +129,12 @@ export const createProduct: RequestHandler = (req, res) => {
 };
 
 // PUT /api/products/:id - Update product (admin only)
-export const updateProduct: RequestHandler = (req, res) => {
+export const updateProduct: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const updates: Partial<UpdateProductRequest> = req.body;
 
-    const updatedProduct = db.updateProduct(id, updates);
+    const updatedProduct = await db.updateProduct(id, updates);
 
     if (!updatedProduct) {
       return res.status(404).json({ error: "Product not found" });
@@ -148,14 +148,10 @@ export const updateProduct: RequestHandler = (req, res) => {
 };
 
 // DELETE /api/products/:id - Delete product (admin only)
-export const deleteProduct: RequestHandler = (req, res) => {
+export const deleteProduct: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = db.deleteProduct(id);
-
-    if (!deleted) {
-      return res.status(404).json({ error: "Product not found" });
-    }
+    await db.deleteProduct(id);
 
     res.status(204).send();
   } catch (error) {
@@ -165,10 +161,10 @@ export const deleteProduct: RequestHandler = (req, res) => {
 };
 
 // GET /api/products/category/:categoryId - Get products by category
-export const getProductsByCategory: RequestHandler = (req, res) => {
+export const getProductsByCategory: RequestHandler = async (req, res) => {
   try {
     const { categoryId } = req.params;
-    const products = db.getProductsByCategory(categoryId);
+    const products = await db.getProductsByCategory(categoryId);
 
     res.json({
       products: products.filter((p) => p.inStock),
