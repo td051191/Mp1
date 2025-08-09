@@ -86,9 +86,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }, IDLE_TIMEOUT - WARNING_TIME);
 
     // Set logout timeout
-    activityTimeoutRef.current = setTimeout(() => {
+    activityTimeoutRef.current = setTimeout(async () => {
       console.log("Auto-logout due to inactivity");
-      logout();
+      try {
+        await logout();
+      } catch (error) {
+        console.error("Error during auto-logout:", error);
+      }
     }, IDLE_TIMEOUT);
   }, [user, IDLE_TIMEOUT, WARNING_TIME]);
 
