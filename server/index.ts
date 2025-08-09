@@ -92,5 +92,8 @@ export function createServer() {
   app.post("/api/auth/logout", logout);
   app.get("/api/auth/verify", verify);
 
+  // Export API
+  app.get("/api/export", requireAuth, exportData);
+
   return app;
 }
