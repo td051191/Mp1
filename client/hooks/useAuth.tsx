@@ -94,7 +94,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         console.error("Error during auto-logout:", error);
       }
     }, IDLE_TIMEOUT);
-  }, [user, IDLE_TIMEOUT, WARNING_TIME]);
+  }, [user, IDLE_TIMEOUT, WARNING_TIME, logout]);
 
   // Track user activity
   const handleActivity = useCallback(() => {
