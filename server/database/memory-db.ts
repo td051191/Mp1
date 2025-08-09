@@ -564,6 +564,18 @@ class MemoryDatabase {
       this.cleanExpiredSessions();
     }, 3600000);
   }
+
+  // Export all data
+  exportAllData() {
+    return {
+      products: Array.from(this.products.values()),
+      categories: Array.from(this.categories.values()),
+      content: Array.from(this.content.values()),
+      newsletters: Array.from(this.newsletters.values()),
+      exportedAt: new Date().toISOString(),
+      version: "1.0",
+    };
+  }
 }
 
 // Export singleton instance
