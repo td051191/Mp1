@@ -35,6 +35,7 @@ import {
 } from "./routes/content";
 
 import { login, logout, verify, requireAuth } from "./routes/auth";
+import { exportData } from "./routes/export";
 
 export function createServer() {
   const app = express();
