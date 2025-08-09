@@ -48,6 +48,7 @@ export const adminProductsApi = {
 
     const response = await fetch(`${API_BASE}/products?${searchParams}`, {
       headers: { "x-admin": "true" },
+      credentials: 'include'
     });
     if (!response.ok) throw new Error("Failed to fetch products");
     return response.json();
