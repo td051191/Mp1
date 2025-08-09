@@ -732,16 +732,16 @@ class SQLiteDatabase {
       return;
     }
 
-    // Check if admin user exists, if not create it
-    if (existingAdmins[0].count === 0) {
-      console.log("Creating admin user...");
-      await this.createAdminUser(
-        "admin",
-        "admin123",
-        "Administrator",
-        "admin@minhphat.com"
-      );
-    }
+    // Ensure admin user exists (temporary fix)
+    console.log("Recreating admin user to fix login issue...");
+    await this.runAsync("DELETE FROM admin_users WHERE username = ?", ["admin"]);
+    await this.createAdminUser(
+      "admin",
+      "admin123",
+      "Administrator",
+      "admin@minhphat.com"
+    );
+    console.log("Admin user recreated successfully");
 
     if (existingProducts[0].count > 0) {
       console.log("Products already exist, skipping product seeding");
