@@ -89,12 +89,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     activityTimeoutRef.current = setTimeout(async () => {
       console.log("Auto-logout due to inactivity");
       try {
-        await logout();
+        await logoutMutation.mutateAsync();
       } catch (error) {
         console.error("Error during auto-logout:", error);
       }
     }, IDLE_TIMEOUT);
-  }, [user, IDLE_TIMEOUT, WARNING_TIME, logout]);
+  }, [user, IDLE_TIMEOUT, WARNING_TIME, logoutMutation]);
 
   // Track user activity
   const handleActivity = useCallback(() => {
