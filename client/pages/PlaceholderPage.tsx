@@ -1,6 +1,7 @@
 import { Header } from "@/components/Header";
 import { Button } from "@/components/ui/button";
 import { Construction } from "lucide-react";
+import { Link } from "react-router-dom";
 
 interface PlaceholderPageProps {
   title: string;
