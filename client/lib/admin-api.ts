@@ -21,6 +21,10 @@ const adminHeaders = {
   "x-admin": "true",
 };
 
+const adminFetchOptions = {
+  credentials: 'include' as RequestCredentials
+};
+
 // Admin Products API
 export const adminProductsApi = {
   getAll: async (params?: {
