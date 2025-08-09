@@ -67,6 +67,7 @@ export const adminProductsApi = {
     const response = await fetch(`${API_BASE}/products`, {
       method: "POST",
       headers: adminHeaders,
+      credentials: 'include',
       body: JSON.stringify(data),
     });
     if (!response.ok) {
