@@ -210,36 +210,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     },
   });
 
-  const logoutMutation = useMutation({
-    mutationFn: async () => {
-      const response = await fetch("/api/auth/logout", {
-        method: "POST",
-        credentials: "include",
-      });
-      return response.json();
-    },
-    onSuccess: () => {
-      // Clear activity timeouts
-      if (activityTimeoutRef.current) {
-        clearTimeout(activityTimeoutRef.current);
-      }
-      if (warningTimeoutRef.current) {
-        clearTimeout(warningTimeoutRef.current);
-      }
-
-      setUser(null);
-      setIsWarningShown(false);
-      localStorage.removeItem("admin_user");
-      queryClient.clear();
-    },
-  });
-
   const login = async (username: string, password: string) => {
     await loginMutation.mutateAsync({ username, password });
-  };
-
-  const logout = async () => {
-    await logoutMutation.mutateAsync();
   };
 
   const extendSession = () => {
