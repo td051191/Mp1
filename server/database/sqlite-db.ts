@@ -118,7 +118,7 @@ class SQLiteDatabase {
           user_id TEXT NOT NULL,
           expires_at DATETIME NOT NULL,
           created_at DATETIME DEFAULT CURRENT_TIMESTAMP
-      )`
+      )`,
     ];
 
     // Create tables one by one
@@ -138,7 +138,7 @@ class SQLiteDatabase {
       `CREATE INDEX IF NOT EXISTS idx_content_section ON content(section)`,
       `CREATE INDEX IF NOT EXISTS idx_newsletters_email ON newsletters(email)`,
       `CREATE INDEX IF NOT EXISTS idx_admin_sessions_user_id ON admin_sessions(user_id)`,
-      `CREATE INDEX IF NOT EXISTS idx_admin_sessions_expires_at ON admin_sessions(expires_at)`
+      `CREATE INDEX IF NOT EXISTS idx_admin_sessions_expires_at ON admin_sessions(expires_at)`,
     ];
 
     for (const indexSQL of indexes) {
@@ -148,7 +148,7 @@ class SQLiteDatabase {
 
   private runAsync(sql: string, params: any[] = []): Promise<void> {
     return new Promise((resolve, reject) => {
-      this.db.run(sql, params, function(err) {
+      this.db.run(sql, params, function (err) {
         if (err) reject(err);
         else resolve();
       });
@@ -183,64 +183,91 @@ class SQLiteDatabase {
       SELECT * FROM products 
       ORDER BY created_at DESC
     `);
-    
+
     return rows.map(this.mapRowToProduct);
   }
 
   async getProductById(id: string): Promise<Product | undefined> {
-    const row = await this.getAsync(
-      "SELECT * FROM products WHERE id = ?",
-      [id]
-    );
-    
+    const row = await this.getAsync("SELECT * FROM products WHERE id = ?", [
+      id,
+    ]);
+
     return row ? this.mapRowToProduct(row) : undefined;
   }
 
   async getProductsByCategory(category: string): Promise<Product[]> {
     const rows = await this.allAsync(
       "SELECT * FROM products WHERE category = ? ORDER BY created_at DESC",
-      [category]
+      [category],
     );
-    
+
     return rows.map(this.mapRowToProduct);
   }
 
   async getFeaturedProducts(limit: number = 4): Promise<Product[]> {
-    const rows = await this.allAsync(`
+    const rows = await this.allAsync(
+      `
       SELECT * FROM products 
       WHERE in_stock = TRUE 
       ORDER BY rating DESC 
       LIMIT ?
-    `, [limit]);
-    
+    `,
+      [limit],
+    );
+
     return rows.map(this.mapRowToProduct);
   }
 
-  async createProduct(productData: Omit<Product, "id" | "createdAt" | "updatedAt">): Promise<Product> {
+  async createProduct(
+    productData: Omit<Product, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Product> {
     const id = this.generateId();
     const now = new Date().toISOString();
 
-    await this.runAsync(`
+    await this.runAsync(
+      `
       INSERT INTO products (
         id, name_en, name_vi, description_en, description_vi, price, original_price,
         image, images, category, in_stock, rating, reviews_count, weight, origin,
         harvest_date, shelf_life, nutrition, organic, seasonal, featured, created_at, updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [
-      id, productData.name.en, productData.name.vi, productData.description.en, productData.description.vi,
-      productData.price, productData.originalPrice, productData.image, JSON.stringify(productData.images || []),
-      productData.category, productData.inStock, productData.rating, productData.reviewsCount,
-      productData.weight, productData.origin, productData.harvestDate, productData.shelfLife,
-      JSON.stringify(productData.nutrition || {}), productData.organic, productData.seasonal,
-      productData.featured, now, now
-    ]);
+    `,
+      [
+        id,
+        productData.name.en,
+        productData.name.vi,
+        productData.description.en,
+        productData.description.vi,
+        productData.price,
+        productData.originalPrice,
+        productData.image,
+        JSON.stringify(productData.images || []),
+        productData.category,
+        productData.inStock,
+        productData.rating,
+        productData.reviewsCount,
+        productData.weight,
+        productData.origin,
+        productData.harvestDate,
+        productData.shelfLife,
+        JSON.stringify(productData.nutrition || {}),
+        productData.organic,
+        productData.seasonal,
+        productData.featured,
+        now,
+        now,
+      ],
+    );
 
     const product = await this.getProductById(id);
     if (!product) throw new Error("Failed to create product");
     return product;
   }
 
-  async updateProduct(id: string, productData: Partial<Product>): Promise<Product> {
+  async updateProduct(
+    id: string,
+    productData: Partial<Product>,
+  ): Promise<Product> {
     const updates = [];
     const values = [];
 
@@ -295,11 +322,14 @@ class SQLiteDatabase {
 
     values.push(id);
 
-    await this.runAsync(`
+    await this.runAsync(
+      `
       UPDATE products 
       SET ${updates.join(", ")}, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `, values);
+    `,
+      values,
+    );
 
     const product = await this.getProductById(id);
     if (!product) throw new Error("Product not found");
@@ -316,50 +346,64 @@ class SQLiteDatabase {
       SELECT * FROM categories 
       ORDER BY sort_order, name_en
     `);
-    
+
     return rows.map(this.mapRowToCategory);
   }
 
   async getCategoryById(id: string): Promise<Category | undefined> {
-    const row = await this.getAsync(
-      "SELECT * FROM categories WHERE id = ?",
-      [id]
-    );
-    
+    const row = await this.getAsync("SELECT * FROM categories WHERE id = ?", [
+      id,
+    ]);
+
     return row ? this.mapRowToCategory(row) : undefined;
   }
 
   async getCategoryBySlug(slug: string): Promise<Category | undefined> {
-    const row = await this.getAsync(
-      "SELECT * FROM categories WHERE slug = ?",
-      [slug]
-    );
-    
+    const row = await this.getAsync("SELECT * FROM categories WHERE slug = ?", [
+      slug,
+    ]);
+
     return row ? this.mapRowToCategory(row) : undefined;
   }
 
-  async createCategory(categoryData: Omit<Category, "id" | "createdAt" | "updatedAt">): Promise<Category> {
+  async createCategory(
+    categoryData: Omit<Category, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Category> {
     const id = this.generateId();
     const now = new Date().toISOString();
 
-    await this.runAsync(`
+    await this.runAsync(
+      `
       INSERT INTO categories (
         id, name_en, name_vi, description_en, description_vi, slug, image, 
         count, parent_id, sort_order, created_at, updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [
-      id, categoryData.name.en, categoryData.name.vi, 
-      categoryData.description?.en, categoryData.description?.vi,
-      categoryData.slug, categoryData.image, categoryData.count || 0,
-      categoryData.parentId, categoryData.sortOrder || 0, now, now
-    ]);
+    `,
+      [
+        id,
+        categoryData.name.en,
+        categoryData.name.vi,
+        categoryData.description?.en,
+        categoryData.description?.vi,
+        categoryData.slug,
+        categoryData.image,
+        categoryData.count || 0,
+        categoryData.parentId,
+        categoryData.sortOrder || 0,
+        now,
+        now,
+      ],
+    );
 
     const category = await this.getCategoryById(id);
     if (!category) throw new Error("Failed to create category");
     return category;
   }
 
-  async updateCategory(id: string, categoryData: Partial<Category>): Promise<Category> {
+  async updateCategory(
+    id: string,
+    categoryData: Partial<Category>,
+  ): Promise<Category> {
     const updates = [];
     const values = [];
 
@@ -390,11 +434,14 @@ class SQLiteDatabase {
 
     values.push(id);
 
-    await this.runAsync(`
+    await this.runAsync(
+      `
       UPDATE categories 
       SET ${updates.join(", ")}, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `, values);
+    `,
+      values,
+    );
 
     const category = await this.getCategoryById(id);
     if (!category) throw new Error("Category not found");
@@ -411,56 +458,67 @@ class SQLiteDatabase {
       SELECT * FROM content 
       ORDER BY section, sort_order, key
     `);
-    
+
     return rows.map(this.mapRowToContent);
   }
 
   async getContentById(id: string): Promise<Content | undefined> {
-    const row = await this.getAsync(
-      "SELECT * FROM content WHERE id = ?",
-      [id]
-    );
-    
+    const row = await this.getAsync("SELECT * FROM content WHERE id = ?", [id]);
+
     return row ? this.mapRowToContent(row) : undefined;
   }
 
   async getContentByKey(key: string): Promise<Content | undefined> {
-    const row = await this.getAsync(
-      "SELECT * FROM content WHERE key = ?",
-      [key]
-    );
-    
+    const row = await this.getAsync("SELECT * FROM content WHERE key = ?", [
+      key,
+    ]);
+
     return row ? this.mapRowToContent(row) : undefined;
   }
 
   async getContentBySection(section: string): Promise<Content[]> {
     const rows = await this.allAsync(
       "SELECT * FROM content WHERE section = ? ORDER BY sort_order, key",
-      [section]
+      [section],
     );
-    
+
     return rows.map(this.mapRowToContent);
   }
 
-  async createContent(contentData: Omit<Content, "id" | "createdAt" | "updatedAt">): Promise<Content> {
+  async createContent(
+    contentData: Omit<Content, "id" | "createdAt" | "updatedAt">,
+  ): Promise<Content> {
     const id = this.generateId();
     const now = new Date().toISOString();
 
-    await this.runAsync(`
+    await this.runAsync(
+      `
       INSERT INTO content (
         id, key, value_en, value_vi, type, section, sort_order, created_at, updated_at
       ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-    `, [
-      id, contentData.key, contentData.value.en, contentData.value.vi,
-      contentData.type, contentData.section, contentData.sortOrder || 0, now, now
-    ]);
+    `,
+      [
+        id,
+        contentData.key,
+        contentData.value.en,
+        contentData.value.vi,
+        contentData.type,
+        contentData.section,
+        contentData.sortOrder || 0,
+        now,
+        now,
+      ],
+    );
 
     const content = await this.getContentById(id);
     if (!content) throw new Error("Failed to create content");
     return content;
   }
 
-  async updateContent(id: string, contentData: Partial<Content>): Promise<Content> {
+  async updateContent(
+    id: string,
+    contentData: Partial<Content>,
+  ): Promise<Content> {
     const updates = [];
     const values = [];
 
@@ -487,11 +545,14 @@ class SQLiteDatabase {
 
     values.push(id);
 
-    await this.runAsync(`
+    await this.runAsync(
+      `
       UPDATE content 
       SET ${updates.join(", ")}, updated_at = CURRENT_TIMESTAMP
       WHERE id = ?
-    `, values);
+    `,
+      values,
+    );
 
     const content = await this.getContentById(id);
     if (!content) throw new Error("Content not found");
@@ -503,18 +564,24 @@ class SQLiteDatabase {
   }
 
   // Newsletter
-  async createNewsletterSubscription(email: string, name?: string): Promise<Newsletter> {
+  async createNewsletterSubscription(
+    email: string,
+    name?: string,
+  ): Promise<Newsletter> {
     const id = this.generateId();
     const now = new Date().toISOString();
 
-    await this.runAsync(`
+    await this.runAsync(
+      `
       INSERT INTO newsletters (id, email, name, status, created_at, updated_at)
       VALUES (?, ?, ?, 'active', ?, ?)
-    `, [id, email, name || null, now, now]);
+    `,
+      [id, email, name || null, now, now],
+    );
 
     const newsletter = await this.getAsync(
       "SELECT * FROM newsletters WHERE id = ?",
-      [id]
+      [id],
     );
 
     return this.mapRowToNewsletter(newsletter);
@@ -525,43 +592,61 @@ class SQLiteDatabase {
       SELECT * FROM newsletters 
       ORDER BY created_at DESC
     `);
-    
+
     return rows.map(this.mapRowToNewsletter);
   }
 
   // Admin Users
-  async createAdminUser(username: string, password: string, name: string, email: string): Promise<AdminUser> {
+  async createAdminUser(
+    username: string,
+    password: string,
+    name: string,
+    email: string,
+  ): Promise<AdminUser> {
     const id = this.generateId();
-    const passwordHash = crypto.createHash("md5").update(password).digest("hex");
+    const passwordHash = crypto
+      .createHash("md5")
+      .update(password)
+      .digest("hex");
     const now = new Date().toISOString();
 
-    await this.runAsync(`
+    await this.runAsync(
+      `
       INSERT INTO admin_users (id, username, password_hash, name, email, created_at, updated_at)
       VALUES (?, ?, ?, ?, ?, ?, ?)
-    `, [id, username, passwordHash, name, email, now, now]);
-
-    const user = await this.getAsync(
-      "SELECT * FROM admin_users WHERE id = ?",
-      [id]
+    `,
+      [id, username, passwordHash, name, email, now, now],
     );
+
+    const user = await this.getAsync("SELECT * FROM admin_users WHERE id = ?", [
+      id,
+    ]);
 
     return this.mapRowToAdminUser(user);
   }
 
-  async getAdminUserByUsername(username: string): Promise<AdminUser | undefined> {
+  async getAdminUserByUsername(
+    username: string,
+  ): Promise<AdminUser | undefined> {
     const row = await this.getAsync(
       "SELECT * FROM admin_users WHERE username = ?",
-      [username]
+      [username],
     );
-    
+
     return row ? this.mapRowToAdminUser(row) : undefined;
   }
 
-  async validateAdminUser(username: string, password: string): Promise<AdminUser | null> {
-    const passwordHash = crypto.createHash("md5").update(password).digest("hex");
+  async validateAdminUser(
+    username: string,
+    password: string,
+  ): Promise<AdminUser | null> {
+    const passwordHash = crypto
+      .createHash("md5")
+      .update(password)
+      .digest("hex");
     const row = await this.getAsync(
       "SELECT * FROM admin_users WHERE username = ? AND password_hash = ?",
-      [username, passwordHash]
+      [username, passwordHash],
     );
 
     return row ? this.mapRowToAdminUser(row) : null;
@@ -573,14 +658,17 @@ class SQLiteDatabase {
     const expiresAt = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
     const now = new Date().toISOString();
 
-    await this.runAsync(`
+    await this.runAsync(
+      `
       INSERT INTO admin_sessions (id, user_id, expires_at, created_at)
       VALUES (?, ?, ?, ?)
-    `, [id, userId, expiresAt.toISOString(), now]);
+    `,
+      [id, userId, expiresAt.toISOString(), now],
+    );
 
     const session = await this.getAsync(
       "SELECT * FROM admin_sessions WHERE id = ?",
-      [id]
+      [id],
     );
 
     return this.mapRowToAdminSession(session);
@@ -589,9 +677,9 @@ class SQLiteDatabase {
   async getAdminSession(sessionId: string): Promise<AdminSession | undefined> {
     const row = await this.getAsync(
       "SELECT * FROM admin_sessions WHERE id = ? AND expires_at > datetime('now')",
-      [sessionId]
+      [sessionId],
     );
-    
+
     return row ? this.mapRowToAdminSession(row) : undefined;
   }
 
@@ -600,7 +688,9 @@ class SQLiteDatabase {
   }
 
   async cleanExpiredSessions(): Promise<void> {
-    await this.runAsync("DELETE FROM admin_sessions WHERE expires_at <= datetime('now')");
+    await this.runAsync(
+      "DELETE FROM admin_sessions WHERE expires_at <= datetime('now')",
+    );
   }
 
   // Export all data
@@ -653,7 +743,9 @@ class SQLiteDatabase {
     return {
       id: row.id,
       name: { en: row.name_en, vi: row.name_vi },
-      description: row.description_en ? { en: row.description_en, vi: row.description_vi } : undefined,
+      description: row.description_en
+        ? { en: row.description_en, vi: row.description_vi }
+        : undefined,
       slug: row.slug,
       image: row.image,
       count: row.count,
@@ -715,8 +807,12 @@ class SQLiteDatabase {
   // Seed data
   private async seedData() {
     // Check if data already exists
-    const existingProducts = await this.allAsync("SELECT COUNT(*) as count FROM products");
-    const existingAdmins = await this.allAsync("SELECT COUNT(*) as count FROM admin_users");
+    const existingProducts = await this.allAsync(
+      "SELECT COUNT(*) as count FROM products",
+    );
+    const existingAdmins = await this.allAsync(
+      "SELECT COUNT(*) as count FROM admin_users",
+    );
 
     if (existingProducts[0].count > 0 && existingAdmins[0].count > 0) {
       console.log("Database already seeded");
@@ -730,7 +826,7 @@ class SQLiteDatabase {
         "admin",
         "admin123",
         "Administrator",
-        "admin@minhphat.com"
+        "admin@minhphat.com",
       );
     }
 
@@ -751,9 +847,13 @@ class SQLiteDatabase {
       {
         id: "fruits",
         name: { en: "Fruits", vi: "Trái cây" },
-        description: { en: "Fresh seasonal fruits", vi: "Trái cây tươi theo mùa" },
+        description: {
+          en: "Fresh seasonal fruits",
+          vi: "Trái cây tươi theo mùa",
+        },
         slug: "fruits",
-        image: "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=800&h=600&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1619566636858-adf3ef46400b?w=800&h=600&fit=crop",
         count: 0,
         parentId: null,
         sortOrder: 1,
@@ -761,9 +861,13 @@ class SQLiteDatabase {
       {
         id: "vegetables",
         name: { en: "Vegetables", vi: "Rau củ" },
-        description: { en: "Farm-fresh vegetables", vi: "Rau củ tươi từ trang trại" },
+        description: {
+          en: "Farm-fresh vegetables",
+          vi: "Rau củ tươi từ trang trại",
+        },
         slug: "vegetables",
-        image: "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1540420773420-3366772f4999?w=800&h=600&fit=crop",
         count: 0,
         parentId: null,
         sortOrder: 2,
@@ -771,9 +875,13 @@ class SQLiteDatabase {
       {
         id: "organic",
         name: { en: "Organic", vi: "Hữu cơ" },
-        description: { en: "Certified organic produce", vi: "Sản phẩm hữu cơ được chứng nhận" },
+        description: {
+          en: "Certified organic produce",
+          vi: "Sản phẩm hữu cơ được chứng nhận",
+        },
         slug: "organic",
-        image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&h=600&fit=crop",
         count: 0,
         parentId: null,
         sortOrder: 3,
@@ -781,9 +889,13 @@ class SQLiteDatabase {
       {
         id: "seasonal",
         name: { en: "Seasonal", vi: "Theo mùa" },
-        description: { en: "Best seasonal picks", vi: "Lựa chọn tốt nhất theo mùa" },
+        description: {
+          en: "Best seasonal picks",
+          vi: "Lựa chọn tốt nhất theo mùa",
+        },
         slug: "seasonal",
-        image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop",
         count: 0,
         parentId: null,
         sortOrder: 4,
@@ -791,9 +903,13 @@ class SQLiteDatabase {
       {
         id: "bundles",
         name: { en: "Bundles", vi: "Gói kết hợp" },
-        description: { en: "Value fruit & vegetable bundles", vi: "Gói trái cây và rau củ giá trị" },
+        description: {
+          en: "Value fruit & vegetable bundles",
+          vi: "Gói trái cây và rau củ giá trị",
+        },
         slug: "bundles",
-        image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1542838132-92c53300491e?w=800&h=600&fit=crop",
         count: 0,
         parentId: null,
         sortOrder: 5,
@@ -808,10 +924,14 @@ class SQLiteDatabase {
     const products = [
       {
         name: { en: "Fresh Strawberries", vi: "Dâu tây tươi" },
-        description: { en: "Sweet and juicy strawberries, perfect for desserts", vi: "Dâu tây ngọt và mọng nước, hoàn hảo cho món tráng miệng" },
+        description: {
+          en: "Sweet and juicy strawberries, perfect for desserts",
+          vi: "Dâu tây ngọt và mọng nước, hoàn hảo cho món tráng miệng",
+        },
         price: 5.99,
         originalPrice: 7.99,
-        image: "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=800&h=600&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1464965911861-746a04b4bca6?w=800&h=600&fit=crop",
         category: "fruits",
         inStock: true,
         rating: 4.8,
@@ -824,9 +944,13 @@ class SQLiteDatabase {
       },
       {
         name: { en: "Organic Bananas", vi: "Chuối hữu cơ" },
-        description: { en: "Ripe yellow bananas, great source of potassium", vi: "Chuối vàng chín, nguồn kali tuyệt vời" },
+        description: {
+          en: "Ripe yellow bananas, great source of potassium",
+          vi: "Chuối vàng chín, nguồn kali tuyệt vời",
+        },
         price: 2.49,
-        image: "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=800&h=600&fit=crop",
+        image:
+          "https://images.unsplash.com/photo-1571771894821-ce9b6c11b08e?w=800&h=600&fit=crop",
         category: "fruits",
         inStock: true,
         rating: 4.6,
@@ -846,12 +970,12 @@ class SQLiteDatabase {
     for (const category of categories) {
       const count = await this.allAsync(
         "SELECT COUNT(*) as count FROM products WHERE category = ?",
-        [category.id]
+        [category.id],
       );
-      await this.runAsync(
-        "UPDATE categories SET count = ? WHERE id = ?",
-        [count[0].count, category.id]
-      );
+      await this.runAsync("UPDATE categories SET count = ? WHERE id = ?", [
+        count[0].count,
+        category.id,
+      ]);
     }
 
     // Seed content
@@ -900,7 +1024,7 @@ class SQLiteDatabase {
       "admin",
       "admin123",
       "Administrator",
-      "admin@minhphat.com"
+      "admin@minhphat.com",
     );
 
     console.log("Database seeded successfully");

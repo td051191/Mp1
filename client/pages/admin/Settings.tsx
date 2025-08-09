@@ -25,16 +25,16 @@ export default function AdminSettings() {
 
       // Create download link
       const url = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
+      const link = document.createElement("a");
       link.href = url;
-      link.download = `minhphat-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      link.download = `minhphat-data-export-${new Date().toISOString().split("T")[0]}.json`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Export failed:', error);
-      alert('Failed to export data. Please try again.');
+      console.error("Export failed:", error);
+      alert("Failed to export data. Please try again.");
     } finally {
       setIsExporting(false);
     }

@@ -7,11 +7,13 @@ This guide explains how to backup and restore the Minh Phát SQLite database.
 Two backup scripts are provided:
 
 ### Node.js Script (Cross-platform)
+
 - **Location**: `scripts/backup-database.js`
 - **Advantages**: Works on all platforms (Windows, macOS, Linux)
 - **Usage**: Via npm scripts or direct node execution
 
 ### Bash Script (Unix/Linux/macOS)
+
 - **Location**: `scripts/backup-database.sh`
 - **Advantages**: Native shell script with colored output
 - **Usage**: Direct execution on Unix-like systems
@@ -82,6 +84,7 @@ project/
 ## 📊 Backup Features
 
 ### ✅ What's Included in Backups
+
 - All products with multilingual content
 - Categories and subcategories
 - Website content and translations
@@ -90,6 +93,7 @@ project/
 - All indexes and database structure
 
 ### 🔒 Security
+
 - Backup files are standard SQLite files
 - Admin passwords remain MD5 hashed
 - No sensitive data is exposed in plain text
@@ -97,11 +101,13 @@ project/
 ## ⚡ Quick Examples
 
 ### Create Daily Backup
+
 ```bash
 npm run db:backup
 ```
 
 ### Emergency Restore
+
 ```bash
 # 1. List available backups
 npm run db:list
@@ -111,7 +117,9 @@ npm run db:restore database_backup_2024-01-15_14-30-45.sqlite
 ```
 
 ### Scheduled Backups (Cron)
+
 Add to your crontab for daily backups at 2 AM:
+
 ```bash
 0 2 * * * cd /path/to/your/project && npm run db:backup
 ```
@@ -126,20 +134,24 @@ Add to your crontab for daily backups at 2 AM:
 ## 🛠️ Troubleshooting
 
 ### "Database file not found"
+
 - Ensure the server has been started at least once to create the initial database
 - Check that `data/database.sqlite` exists
 
 ### "Permission denied"
+
 - On Unix systems, make the bash script executable: `chmod +x scripts/backup-database.sh`
 - Ensure write permissions to the backup directory
 
 ### "Backup verification failed"
+
 - Usually indicates disk space issues or file system problems
 - Check available disk space
 
 ## 📞 Support
 
 For backup-related issues:
+
 1. Check this documentation
 2. Verify file permissions
 3. Ensure adequate disk space

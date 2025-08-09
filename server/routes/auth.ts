@@ -8,7 +8,9 @@ export const login: RequestHandler = async (req, res) => {
 
     // Validate input
     if (!username || !password) {
-      return res.status(400).json({ error: "Username and password are required" });
+      return res
+        .status(400)
+        .json({ error: "Username and password are required" });
     }
 
     // Validate credentials

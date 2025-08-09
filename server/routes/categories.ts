@@ -133,8 +133,9 @@ export const deleteCategory: RequestHandler = async (req, res) => {
     // Check if category has products
     const products = await db.getProductsByCategory(id);
     if (products.length > 0) {
-      return res.status(400).json({ 
-        error: "Cannot delete category with products. Move or delete products first." 
+      return res.status(400).json({
+        error:
+          "Cannot delete category with products. Move or delete products first.",
       });
     }
 

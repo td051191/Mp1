@@ -106,8 +106,8 @@ export const createContent: RequestHandler = async (req, res) => {
     // Check if key already exists in the same section
     const existingContent = await db.getContentByKey(contentData.key);
     if (existingContent && existingContent.section === contentData.section) {
-      return res.status(400).json({ 
-        error: "Content with this key already exists in this section" 
+      return res.status(400).json({
+        error: "Content with this key already exists in this section",
       });
     }
 
@@ -165,8 +165,8 @@ export const subscribeNewsletter: RequestHandler = async (req, res) => {
 
     // Check if already subscribed
     const newsletters = await db.getAllNewsletters();
-    const existingSubscription = newsletters.find(n => n.email === email);
-    
+    const existingSubscription = newsletters.find((n) => n.email === email);
+
     if (existingSubscription) {
       return res.status(400).json({ error: "Email already subscribed" });
     }
