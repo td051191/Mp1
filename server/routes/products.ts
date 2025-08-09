@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { db } from "../database/memory-db";
+import { db } from "../database/sqlite-db";
 import {
   ProductsResponse,
   CreateProductRequest,

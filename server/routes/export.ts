@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { db } from "../database/memory-db";
+import { db } from "../database/sqlite-db";
 
 // GET /api/export - Export all data (admin only)
 export const exportData: RequestHandler = (req, res) => {
