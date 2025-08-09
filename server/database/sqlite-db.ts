@@ -729,8 +729,26 @@ class SQLiteDatabase {
   private async seedData() {
     // Check if data already exists
     const existingProducts = await this.allAsync("SELECT COUNT(*) as count FROM products");
-    if (existingProducts[0].count > 0) {
+    const existingAdmins = await this.allAsync("SELECT COUNT(*) as count FROM admin_users");
+
+    if (existingProducts[0].count > 0 && existingAdmins[0].count > 0) {
       console.log("Database already seeded");
+      return;
+    }
+
+    // Check if admin user exists, if not create it
+    if (existingAdmins[0].count === 0) {
+      console.log("Creating admin user...");
+      await this.createAdminUser(
+        "admin",
+        "admin123",
+        "Administrator",
+        "admin@minhphat.com"
+      );
+    }
+
+    if (existingProducts[0].count > 0) {
+      console.log("Products already exist, skipping product seeding");
       return;
     }
 
