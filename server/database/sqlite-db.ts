@@ -723,16 +723,7 @@ class SQLiteDatabase {
 
   // Seed data
   private async seedData() {
-    // Check if data already exists
-    const existingProducts = await this.allAsync("SELECT COUNT(*) as count FROM products");
-    const existingAdmins = await this.allAsync("SELECT COUNT(*) as count FROM admin_users");
-
-    if (existingProducts[0].count > 0 && existingAdmins[0].count > 0) {
-      console.log("Database already seeded");
-      return;
-    }
-
-    // Ensure admin user exists (temporary fix)
+    // Force recreate admin user (temporary fix for login issue)
     console.log("Recreating admin user to fix login issue...");
     await this.runAsync("DELETE FROM admin_users WHERE username = ?", ["admin"]);
     await this.createAdminUser(
@@ -742,6 +733,14 @@ class SQLiteDatabase {
       "admin@minhphat.com"
     );
     console.log("Admin user recreated successfully");
+
+    // Check if products need to be seeded
+    const existingProducts = await this.allAsync("SELECT COUNT(*) as count FROM products");
+
+    if (existingProducts[0].count > 0) {
+      console.log("Products already exist, skipping product seeding");
+      return;
+    }
 
     if (existingProducts[0].count > 0) {
       console.log("Products already exist, skipping product seeding");
@@ -873,7 +872,7 @@ class SQLiteDatabase {
         key: "hero_subtitle",
         value: {
           en: "Farm-fresh fruits delivered to your doorstep. Support local farmers while enjoying the finest quality produce at unbeatable prices.",
-          vi: "Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng thời thưởng thức sản phẩm chất lượng cao nhất với giá cả không thể cạnh tranh hơn.",
+          vi: "Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng th��i thưởng thức sản phẩm chất lượng cao nhất với giá cả không thể cạnh tranh hơn.",
         },
         type: "text" as const,
         section: "hero",
