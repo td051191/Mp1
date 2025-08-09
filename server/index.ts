@@ -62,26 +62,26 @@ export function createServer() {
   app.get("/api/products/category/:categoryId", getProductsByCategory);
   app.get("/api/products", getProducts);
   app.get("/api/products/:id", getProductById);
-  app.post("/api/products", createProduct);
-  app.put("/api/products/:id", updateProduct);
-  app.delete("/api/products/:id", deleteProduct);
+  app.post("/api/products", requireAuth, createProduct);
+  app.put("/api/products/:id", requireAuth, updateProduct);
+  app.delete("/api/products/:id", requireAuth, deleteProduct);
 
   // Categories API routes (specific routes before parameterized ones)
   app.get("/api/categories/slug/:slug", getCategoryBySlug);
   app.get("/api/categories", getCategories);
   app.get("/api/categories/:id", getCategoryById);
-  app.post("/api/categories", createCategory);
-  app.put("/api/categories/:id", updateCategory);
-  app.delete("/api/categories/:id", deleteCategory);
+  app.post("/api/categories", requireAuth, createCategory);
+  app.put("/api/categories/:id", requireAuth, updateCategory);
+  app.delete("/api/categories/:id", requireAuth, deleteCategory);
 
   // Content API routes (specific routes before parameterized ones)
   app.get("/api/content/key/:key", getContentByKey);
   app.get("/api/content/section/:section", getContentBySection);
   app.get("/api/content", getContent);
   app.get("/api/content/:id", getContentById);
-  app.post("/api/content", createContent);
-  app.put("/api/content/:id", updateContent);
-  app.delete("/api/content/:id", deleteContent);
+  app.post("/api/content", requireAuth, createContent);
+  app.put("/api/content/:id", requireAuth, updateContent);
+  app.delete("/api/content/:id", requireAuth, deleteContent);
 
   // Newsletter API
   app.post("/api/newsletter/subscribe", subscribeNewsletter);
