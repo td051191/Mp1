@@ -7,9 +7,9 @@ import {
 } from "@shared/database";
 
 // GET /api/categories - Get all categories
-export const getCategories: RequestHandler = (req, res) => {
+export const getCategories: RequestHandler = async (req, res) => {
   try {
-    const categories = db.getAllCategories().filter((c) => c.isActive);
+    const categories = await db.getAllCategories();
 
     const response: CategoriesResponse = {
       categories,
@@ -23,12 +23,12 @@ export const getCategories: RequestHandler = (req, res) => {
 };
 
 // GET /api/categories/:id - Get category by ID
-export const getCategoryById: RequestHandler = (req, res) => {
+export const getCategoryById: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const category = db.getCategoryById(id);
+    const category = await db.getCategoryById(id);
 
-    if (!category || !category.isActive) {
+    if (!category) {
       return res.status(404).json({ error: "Category not found" });
     }
 
@@ -40,23 +40,23 @@ export const getCategoryById: RequestHandler = (req, res) => {
 };
 
 // GET /api/categories/slug/:slug - Get category by slug
-export const getCategoryBySlug: RequestHandler = (req, res) => {
+export const getCategoryBySlug: RequestHandler = async (req, res) => {
   try {
     const { slug } = req.params;
-    const category = db.getCategoryBySlug(slug);
+    const category = await db.getCategoryBySlug(slug);
 
-    if (!category || !category.isActive) {
+    if (!category) {
       return res.status(404).json({ error: "Category not found" });
     }
 
-    // Get products count for this category
-    const products = db.getProductsByCategory(category.id);
-    const categoryWithCount = {
-      ...category,
-      count: products.filter((p) => p.inStock).length,
-    };
+    // Get products in this category
+    const products = await db.getProductsByCategory(category.id);
 
-    res.json(categoryWithCount);
+    res.json({
+      category,
+      products: products.filter((p) => p.inStock),
+      productCount: products.length,
+    });
   } catch (error) {
     console.error("Error fetching category by slug:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -64,7 +64,7 @@ export const getCategoryBySlug: RequestHandler = (req, res) => {
 };
 
 // POST /api/categories - Create new category (admin only)
-export const createCategory: RequestHandler = (req, res) => {
+export const createCategory: RequestHandler = async (req, res) => {
   try {
     const categoryData: CreateCategoryRequest = req.body;
 
@@ -80,15 +80,15 @@ export const createCategory: RequestHandler = (req, res) => {
     }
 
     // Check if slug already exists
-    const existingCategory = db.getCategoryBySlug(categoryData.slug);
+    const existingCategory = await db.getCategoryBySlug(categoryData.slug);
     if (existingCategory) {
       return res.status(400).json({ error: "Category slug already exists" });
     }
 
-    // Create category with defaults
-    const newCategory = db.createCategory({
+    // Create category
+    const newCategory = await db.createCategory({
       ...categoryData,
-      isActive: true,
+      count: 0,
     });
 
     res.status(201).json(newCategory);
@@ -99,20 +99,20 @@ export const createCategory: RequestHandler = (req, res) => {
 };
 
 // PUT /api/categories/:id - Update category (admin only)
-export const updateCategory: RequestHandler = (req, res) => {
+export const updateCategory: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const updates: Partial<UpdateCategoryRequest> = req.body;
 
     // If updating slug, check for conflicts
     if (updates.slug) {
-      const existingCategory = db.getCategoryBySlug(updates.slug);
+      const existingCategory = await db.getCategoryBySlug(updates.slug);
       if (existingCategory && existingCategory.id !== id) {
         return res.status(400).json({ error: "Category slug already exists" });
       }
     }
 
-    const updatedCategory = db.updateCategory(id, updates);
+    const updatedCategory = await db.updateCategory(id, updates);
 
     if (!updatedCategory) {
       return res.status(404).json({ error: "Category not found" });
@@ -126,24 +126,19 @@ export const updateCategory: RequestHandler = (req, res) => {
 };
 
 // DELETE /api/categories/:id - Delete category (admin only)
-export const deleteCategory: RequestHandler = (req, res) => {
+export const deleteCategory: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
 
     // Check if category has products
-    const products = db.getProductsByCategory(id);
+    const products = await db.getProductsByCategory(id);
     if (products.length > 0) {
-      return res.status(400).json({
-        error:
-          "Cannot delete category with existing products. Move or delete products first.",
+      return res.status(400).json({ 
+        error: "Cannot delete category with products. Move or delete products first." 
       });
     }
 
-    const deleted = db.deleteCategory(id);
-
-    if (!deleted) {
-      return res.status(404).json({ error: "Category not found" });
-    }
+    await db.deleteCategory(id);
 
     res.status(204).send();
   } catch (error) {
