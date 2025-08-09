@@ -10,7 +10,10 @@ import {
   Palette,
   Database,
   Shield,
+  Download,
 } from "lucide-react";
+import { adminExportApi } from "@/lib/admin-api";
+import { useState } from "react";
 
 export default function AdminSettings() {
   return (
