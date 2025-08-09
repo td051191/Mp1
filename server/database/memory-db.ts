@@ -101,7 +101,7 @@ class MemoryDatabase {
     const category: Category = {
       ...categoryData,
       id,
-      count: this.getProductsByCategory(id).length,
+      count: 0, // Will be updated later when products are seeded
       createdAt: now,
       updatedAt: now,
     };
