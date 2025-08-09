@@ -250,7 +250,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
     },
     onSuccess: (data) => {
-      if (data.success && data.user) {
+      if (data.user) {
         setUser(data.user);
         localStorage.setItem("admin_user", JSON.stringify(data.user));
         queryClient.invalidateQueries({ queryKey: ["auth-verify"] });
