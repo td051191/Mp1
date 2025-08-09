@@ -559,15 +559,6 @@ class SQLiteDatabase {
 
   async validateAdminUser(username: string, password: string): Promise<AdminUser | null> {
     const passwordHash = crypto.createHash("md5").update(password).digest("hex");
-    console.log(`Validating: username="${username}", expected hash="${passwordHash}"`);
-
-    // Check all admin users to debug
-    const allUsers = await this.allAsync("SELECT * FROM admin_users");
-    console.log(`Found ${allUsers.length} admin users:`, allUsers.map(u => ({
-      username: u.username,
-      hash: u.password_hash
-    })));
-
     const row = await this.getAsync(
       "SELECT * FROM admin_users WHERE username = ? AND password_hash = ?",
       [username, passwordHash]
@@ -872,7 +863,7 @@ class SQLiteDatabase {
         key: "hero_subtitle",
         value: {
           en: "Farm-fresh fruits delivered to your doorstep. Support local farmers while enjoying the finest quality produce at unbeatable prices.",
-          vi: "Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng th��i thưởng thức sản phẩm chất lượng cao nhất với giá cả không thể cạnh tranh hơn.",
+          vi: "Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng thời thưởng thức sản phẩm chất lượng cao nhất với giá cả không thể cạnh tranh hơn.",
         },
         type: "text" as const,
         section: "hero",
