@@ -119,14 +119,17 @@ export default function Index() {
                     : "100% Tươi & Hữu cơ"}
                 </Badge>
                 <h1 className="text-5xl lg:text-6xl font-bold leading-tight">
-                  {getContent("hero_title", {
-                    en: "Fresh Fruits",
-                    vi: "Trái cây tươi",
-                  })}
+                  <span className="block">
+                    {getContent("hero_title", {
+                      en: "Fresh Fruits",
+                      vi: "Trái cây tươi",
+                    }).split(' ').slice(0, 2).join(' ')}
+                  </span>
                   <span className="block text-fresh-green">
-                    {language === "en"
-                      ? "Delivered Daily"
-                      : "Giao hàng hàng ngày"}
+                    {getContent("hero_title", {
+                      en: "Delivered Daily",
+                      vi: "Giao hàng hàng ngày",
+                    }).split(' ').slice(2).join(' ')}
                   </span>
                 </h1>
                 <p className="text-xl text-muted-foreground">
