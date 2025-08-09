@@ -16,6 +16,30 @@ import { adminExportApi } from "@/lib/admin-api";
 import { useState } from "react";
 
 export default function AdminSettings() {
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExportData = async () => {
+    try {
+      setIsExporting(true);
+      const blob = await adminExportApi.exportData();
+
+      // Create download link
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `minhphat-data-export-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error('Export failed:', error);
+      alert('Failed to export data. Please try again.');
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <AdminLayout>
       <div className="space-y-6">
