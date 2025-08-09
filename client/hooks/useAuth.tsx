@@ -181,6 +181,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await logoutMutation.mutateAsync();
   };
 
+  // Store logout function in ref so it can be called from timeouts
+  useEffect(() => {
+    logoutRef.current = logout;
+  }, [logout]);
+
   const loginMutation = useMutation({
     mutationFn: async ({
       username,
