@@ -442,7 +442,7 @@ class MemoryDatabase {
         price: 3.99,
         originalPrice: 4.99,
         image: "🍎",
-        category: citrusId,
+        category: stoneFruitsId,
         rating: 4.9,
         reviews: 203,
         badge: { en: "Premium", vi: "Cao cấp" },
@@ -518,7 +518,7 @@ class MemoryDatabase {
         key: "hero_subtitle",
         value: {
           en: "Farm-fresh fruits delivered to your doorstep. Support local farmers while enjoying the finest quality produce at unbeatable prices.",
-          vi: "Trái cây tươi từ trang trại giao đ��n tận nhà. Hỗ trợ nông dân địa phương đồng thời thưởng thức sản phẩm chất lượng cao nhất với giá cả không thể cạnh tranh hơn.",
+          vi: "Trái cây tươi từ trang trại giao đến tận nhà. Hỗ trợ nông dân địa phương đồng thời thưởng thức sản phẩm chất lượng cao nhất với giá cả không thể cạnh tranh hơn.",
         },
         type: "text" as const,
         section: "hero",
