@@ -46,8 +46,12 @@ export function IdleTimeoutWarning() {
     extendSession();
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    try {
+      await logout();
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
   };
 
   return (
