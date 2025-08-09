@@ -112,6 +112,7 @@ export const adminCategoriesApi = {
   getAll: async (): Promise<CategoriesResponse> => {
     const response = await fetch(`${API_BASE}/categories`, {
       headers: { "x-admin": "true" },
+      credentials: 'include'
     });
     if (!response.ok) throw new Error("Failed to fetch categories");
     return response.json();
@@ -120,6 +121,7 @@ export const adminCategoriesApi = {
   getById: async (id: string): Promise<Category> => {
     const response = await fetch(`${API_BASE}/categories/${id}`, {
       headers: { "x-admin": "true" },
+      credentials: 'include'
     });
     if (!response.ok) throw new Error("Failed to fetch category");
     return response.json();
@@ -129,6 +131,7 @@ export const adminCategoriesApi = {
     const response = await fetch(`${API_BASE}/categories`, {
       method: "POST",
       headers: adminHeaders,
+      credentials: 'include',
       body: JSON.stringify(data),
     });
     if (!response.ok) {
@@ -145,6 +148,7 @@ export const adminCategoriesApi = {
     const response = await fetch(`${API_BASE}/categories/${id}`, {
       method: "PUT",
       headers: adminHeaders,
+      credentials: 'include',
       body: JSON.stringify(data),
     });
     if (!response.ok) {
@@ -158,6 +162,7 @@ export const adminCategoriesApi = {
     const response = await fetch(`${API_BASE}/categories/${id}`, {
       method: "DELETE",
       headers: { "x-admin": "true" },
+      credentials: 'include'
     });
     if (!response.ok) {
       const error = await response.json();
