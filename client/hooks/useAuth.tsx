@@ -197,6 +197,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     logoutRef.current = logout;
   }, [logout]);
 
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (activityTimeoutRef.current) {
+        clearTimeout(activityTimeoutRef.current);
+      }
+      if (warningTimeoutRef.current) {
+        clearTimeout(warningTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const loginMutation = useMutation({
     mutationFn: async ({
       username,
