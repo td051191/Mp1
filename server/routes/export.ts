@@ -2,9 +2,9 @@ import { RequestHandler } from "express";
 import { db } from "../database/sqlite-db";
 
 // GET /api/export - Export all data (admin only)
-export const exportData: RequestHandler = (req, res) => {
+export const exportData: RequestHandler = async (req, res) => {
   try {
-    const exportData = db.exportAllData();
+    const exportData = await db.exportAllData();
     
     // Set headers for file download
     res.setHeader('Content-Type', 'application/json');
