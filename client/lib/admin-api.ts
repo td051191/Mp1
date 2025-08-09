@@ -242,3 +242,18 @@ export const adminContentApi = {
     }
   },
 };
+
+// Admin Export API
+export const adminExportApi = {
+  exportData: async (): Promise<Blob> => {
+    const response = await fetch(`${API_BASE}/export`, {
+      headers: { "x-admin": "true" },
+      credentials: "include",
+    });
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || "Failed to export data");
+    }
+    return response.blob();
+  },
+};
