@@ -178,11 +178,11 @@ export default function AdminSettings() {
               <div>
                 <Label>Database Type</Label>
                 <p className="text-sm text-muted-foreground">
-                  Currently using in-memory database
+                  Currently using SQLite file-based database
                 </p>
               </div>
-              <span className="text-sm bg-yellow-100 text-yellow-800 px-2 py-1 rounded">
-                In-Memory
+              <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded">
+                SQLite
               </span>
             </div>
 
