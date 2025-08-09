@@ -559,6 +559,15 @@ class SQLiteDatabase {
 
   async validateAdminUser(username: string, password: string): Promise<AdminUser | null> {
     const passwordHash = crypto.createHash("md5").update(password).digest("hex");
+    console.log(`Validating: username="${username}", expected hash="${passwordHash}"`);
+
+    // Check all admin users to debug
+    const allUsers = await this.allAsync("SELECT * FROM admin_users");
+    console.log(`Found ${allUsers.length} admin users:`, allUsers.map(u => ({
+      username: u.username,
+      hash: u.password_hash
+    })));
+
     const row = await this.getAsync(
       "SELECT * FROM admin_users WHERE username = ? AND password_hash = ?",
       [username, passwordHash]
