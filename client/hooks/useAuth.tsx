@@ -127,16 +127,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     // Start the idle timeout
     resetIdleTimeout();
 
-    // Cleanup
+    // Cleanup function with stable reference to events
     return () => {
       events.forEach((event) => {
         document.removeEventListener(event, handleActivity, true);
       });
       if (activityTimeoutRef.current) {
         clearTimeout(activityTimeoutRef.current);
+        activityTimeoutRef.current = null;
       }
       if (warningTimeoutRef.current) {
         clearTimeout(warningTimeoutRef.current);
+        warningTimeoutRef.current = null;
       }
     };
   }, [user, handleActivity, resetIdleTimeout]);
