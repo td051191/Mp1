@@ -7,21 +7,18 @@ import {
 } from "@shared/database";
 
 // GET /api/content - Get all content
-export const getContent: RequestHandler = (req, res) => {
+export const getContent: RequestHandler = async (req, res) => {
   try {
     const { section, key } = req.query;
 
-    let content = db.getAllContent();
-
-    // Filter by section if provided
+    let content;
     if (section && typeof section === "string") {
-      content = db.getContentBySection(section);
-    }
-
-    // Filter by key if provided
-    if (key && typeof key === "string") {
-      const singleContent = db.getContentByKey(key);
+      content = await db.getContentBySection(section);
+    } else if (key && typeof key === "string") {
+      const singleContent = await db.getContentByKey(key);
       content = singleContent ? [singleContent] : [];
+    } else {
+      content = await db.getAllContent();
     }
 
     const response: ContentResponse = {
@@ -36,10 +33,10 @@ export const getContent: RequestHandler = (req, res) => {
 };
 
 // GET /api/content/:id - Get content by ID
-export const getContentById: RequestHandler = (req, res) => {
+export const getContentById: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const content = db.getAllContent().find((c) => c.id === id);
+    const content = await db.getContentById(id);
 
     if (!content) {
       return res.status(404).json({ error: "Content not found" });
@@ -53,10 +50,10 @@ export const getContentById: RequestHandler = (req, res) => {
 };
 
 // GET /api/content/key/:key - Get content by key
-export const getContentByKey: RequestHandler = (req, res) => {
+export const getContentByKey: RequestHandler = async (req, res) => {
   try {
     const { key } = req.params;
-    const content = db.getContentByKey(key);
+    const content = await db.getContentByKey(key);
 
     if (!content) {
       return res.status(404).json({ error: "Content not found" });
@@ -70,10 +67,10 @@ export const getContentByKey: RequestHandler = (req, res) => {
 };
 
 // GET /api/content/section/:section - Get content by section
-export const getContentBySection: RequestHandler = (req, res) => {
+export const getContentBySection: RequestHandler = async (req, res) => {
   try {
     const { section } = req.params;
-    const content = db.getContentBySection(section);
+    const content = await db.getContentBySection(section);
 
     res.json({
       content,
@@ -87,7 +84,7 @@ export const getContentBySection: RequestHandler = (req, res) => {
 };
 
 // POST /api/content - Create new content (admin only)
-export const createContent: RequestHandler = (req, res) => {
+export const createContent: RequestHandler = async (req, res) => {
   try {
     const contentData: CreateContentRequest = req.body;
 
@@ -102,21 +99,20 @@ export const createContent: RequestHandler = (req, res) => {
         .json({ error: "Content value in both languages is required" });
     }
 
-    if (!contentData.section) {
-      return res.status(400).json({ error: "Content section is required" });
+    if (!contentData.type) {
+      return res.status(400).json({ error: "Content type is required" });
     }
 
-    // Check if key already exists
-    const existingContent = db.getContentByKey(contentData.key);
-    if (existingContent) {
-      return res.status(400).json({ error: "Content key already exists" });
+    // Check if key already exists in the same section
+    const existingContent = await db.getContentByKey(contentData.key);
+    if (existingContent && existingContent.section === contentData.section) {
+      return res.status(400).json({ 
+        error: "Content with this key already exists in this section" 
+      });
     }
 
-    // Create content with defaults
-    const newContent = db.createContent({
-      ...contentData,
-      type: contentData.type || "text",
-    });
+    // Create content
+    const newContent = await db.createContent(contentData);
 
     res.status(201).json(newContent);
   } catch (error) {
@@ -126,20 +122,12 @@ export const createContent: RequestHandler = (req, res) => {
 };
 
 // PUT /api/content/:id - Update content (admin only)
-export const updateContent: RequestHandler = (req, res) => {
+export const updateContent: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
     const updates: Partial<UpdateContentRequest> = req.body;
 
-    // If updating key, check for conflicts
-    if (updates.key) {
-      const existingContent = db.getContentByKey(updates.key);
-      if (existingContent && existingContent.id !== id) {
-        return res.status(400).json({ error: "Content key already exists" });
-      }
-    }
-
-    const updatedContent = db.updateContent(id, updates);
+    const updatedContent = await db.updateContent(id, updates);
 
     if (!updatedContent) {
       return res.status(404).json({ error: "Content not found" });
@@ -153,14 +141,10 @@ export const updateContent: RequestHandler = (req, res) => {
 };
 
 // DELETE /api/content/:id - Delete content (admin only)
-export const deleteContent: RequestHandler = (req, res) => {
+export const deleteContent: RequestHandler = async (req, res) => {
   try {
     const { id } = req.params;
-    const deleted = db.deleteContent(id);
-
-    if (!deleted) {
-      return res.status(404).json({ error: "Content not found" });
-    }
+    await db.deleteContent(id);
 
     res.status(204).send();
   } catch (error) {
@@ -170,26 +154,32 @@ export const deleteContent: RequestHandler = (req, res) => {
 };
 
 // POST /api/newsletter/subscribe - Subscribe to newsletter
-export const subscribeNewsletter: RequestHandler = (req, res) => {
+export const subscribeNewsletter: RequestHandler = async (req, res) => {
   try {
-    const { email, language = "en" } = req.body;
+    const { email, name } = req.body;
 
+    // Validate email
     if (!email || !email.includes("@")) {
       return res.status(400).json({ error: "Valid email is required" });
     }
 
-    if (!["en", "vi"].includes(language)) {
-      return res.status(400).json({ error: 'Language must be "en" or "vi"' });
+    // Check if already subscribed
+    const newsletters = await db.getAllNewsletters();
+    const existingSubscription = newsletters.find(n => n.email === email);
+    
+    if (existingSubscription) {
+      return res.status(400).json({ error: "Email already subscribed" });
     }
 
-    const subscription = db.subscribeNewsletter(email, language);
+    // Create subscription
+    const subscription = await db.createNewsletterSubscription(email, name);
 
     res.status(201).json({
       message: "Successfully subscribed to newsletter",
       subscription: {
         id: subscription.id,
         email: subscription.email,
-        language: subscription.language,
+        name: subscription.name,
       },
     });
   } catch (error) {
