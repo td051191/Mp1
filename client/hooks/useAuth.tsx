@@ -167,15 +167,24 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Clear activity timeouts
       if (activityTimeoutRef.current) {
         clearTimeout(activityTimeoutRef.current);
+        activityTimeoutRef.current = null;
       }
       if (warningTimeoutRef.current) {
         clearTimeout(warningTimeoutRef.current);
+        warningTimeoutRef.current = null;
       }
 
       setUser(null);
       setIsWarningShown(false);
       localStorage.removeItem("admin_user");
       queryClient.clear();
+    },
+    onError: (error) => {
+      console.error("Logout error:", error);
+      // Still clear local state even if server request fails
+      setUser(null);
+      setIsWarningShown(false);
+      localStorage.removeItem("admin_user");
     },
   });
 
