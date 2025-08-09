@@ -26,7 +26,9 @@ export function IdleTimeoutWarning() {
       setCountdown((prev) => {
         if (prev <= 1) {
           // Auto logout when countdown reaches 0
-          logout().catch(error => console.error('Error during auto-logout:', error));
+          logout().catch((error) =>
+            console.error("Error during auto-logout:", error),
+          );
           return 0;
         }
         return prev - 1;
@@ -50,7 +52,7 @@ export function IdleTimeoutWarning() {
     try {
       await logout();
     } catch (error) {
-      console.error('Error during logout:', error);
+      console.error("Error during logout:", error);
     }
   };
 

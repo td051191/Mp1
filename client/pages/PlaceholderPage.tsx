@@ -23,7 +23,10 @@ export function PlaceholderPage({ title, description }: PlaceholderPageProps) {
             This page is under construction. Continue prompting to fill in the
             content for this section.
           </p>
-          <Button className="bg-primary hover:bg-primary/90 text-primary-foreground" asChild>
+          <Button
+            className="bg-primary hover:bg-primary/90 text-primary-foreground"
+            asChild
+          >
             <Link to="/">Back to Home</Link>
           </Button>
         </div>

@@ -123,13 +123,19 @@ export default function Index() {
                     {getContent("hero_title", {
                       en: "Fresh Fruits",
                       vi: "Trái cây tươi",
-                    }).split(' ').slice(0, 2).join(' ')}
+                    })
+                      .split(" ")
+                      .slice(0, 2)
+                      .join(" ")}
                   </span>
                   <span className="block text-fresh-green">
                     {getContent("hero_title", {
                       en: "Delivered Daily",
                       vi: "Giao hàng hàng ngày",
-                    }).split(' ').slice(2).join(' ')}
+                    })
+                      .split(" ")
+                      .slice(2)
+                      .join(" ")}
                   </span>
                 </h1>
                 <p className="text-xl text-muted-foreground">

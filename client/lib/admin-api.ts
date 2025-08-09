@@ -22,7 +22,7 @@ const adminHeaders = {
 };
 
 const adminFetchOptions = {
-  credentials: 'include' as RequestCredentials
+  credentials: "include" as RequestCredentials,
 };
 
 // Admin Products API
@@ -48,7 +48,7 @@ export const adminProductsApi = {
 
     const response = await fetch(`${API_BASE}/products?${searchParams}`, {
       headers: { "x-admin": "true" },
-      credentials: 'include'
+      credentials: "include",
     });
     if (!response.ok) throw new Error("Failed to fetch products");
     return response.json();
@@ -57,7 +57,7 @@ export const adminProductsApi = {
   getById: async (id: string): Promise<Product> => {
     const response = await fetch(`${API_BASE}/products/${id}`, {
       headers: { "x-admin": "true" },
-      credentials: 'include'
+      credentials: "include",
     });
     if (!response.ok) throw new Error("Failed to fetch product");
     return response.json();
@@ -67,7 +67,7 @@ export const adminProductsApi = {
     const response = await fetch(`${API_BASE}/products`, {
       method: "POST",
       headers: adminHeaders,
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(data),
     });
     if (!response.ok) {
@@ -84,7 +84,7 @@ export const adminProductsApi = {
     const response = await fetch(`${API_BASE}/products/${id}`, {
       method: "PUT",
       headers: adminHeaders,
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(data),
     });
     if (!response.ok) {
@@ -98,7 +98,7 @@ export const adminProductsApi = {
     const response = await fetch(`${API_BASE}/products/${id}`, {
       method: "DELETE",
       headers: { "x-admin": "true" },
-      credentials: 'include'
+      credentials: "include",
     });
     if (!response.ok) {
       const error = await response.json();
@@ -112,7 +112,7 @@ export const adminCategoriesApi = {
   getAll: async (): Promise<CategoriesResponse> => {
     const response = await fetch(`${API_BASE}/categories`, {
       headers: { "x-admin": "true" },
-      credentials: 'include'
+      credentials: "include",
     });
     if (!response.ok) throw new Error("Failed to fetch categories");
     return response.json();
@@ -121,7 +121,7 @@ export const adminCategoriesApi = {
   getById: async (id: string): Promise<Category> => {
     const response = await fetch(`${API_BASE}/categories/${id}`, {
       headers: { "x-admin": "true" },
-      credentials: 'include'
+      credentials: "include",
     });
     if (!response.ok) throw new Error("Failed to fetch category");
     return response.json();
@@ -131,7 +131,7 @@ export const adminCategoriesApi = {
     const response = await fetch(`${API_BASE}/categories`, {
       method: "POST",
       headers: adminHeaders,
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(data),
     });
     if (!response.ok) {
@@ -148,7 +148,7 @@ export const adminCategoriesApi = {
     const response = await fetch(`${API_BASE}/categories/${id}`, {
       method: "PUT",
       headers: adminHeaders,
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(data),
     });
     if (!response.ok) {
@@ -162,7 +162,7 @@ export const adminCategoriesApi = {
     const response = await fetch(`${API_BASE}/categories/${id}`, {
       method: "DELETE",
       headers: { "x-admin": "true" },
-      credentials: 'include'
+      credentials: "include",
     });
     if (!response.ok) {
       const error = await response.json();
@@ -184,7 +184,7 @@ export const adminContentApi = {
 
     const response = await fetch(`${API_BASE}/content?${searchParams}`, {
       headers: { "x-admin": "true" },
-      credentials: 'include'
+      credentials: "include",
     });
     if (!response.ok) throw new Error("Failed to fetch content");
     return response.json();
@@ -193,7 +193,7 @@ export const adminContentApi = {
   getById: async (id: string): Promise<Content> => {
     const response = await fetch(`${API_BASE}/content/${id}`, {
       headers: { "x-admin": "true" },
-      credentials: 'include'
+      credentials: "include",
     });
     if (!response.ok) throw new Error("Failed to fetch content");
     return response.json();
@@ -203,7 +203,7 @@ export const adminContentApi = {
     const response = await fetch(`${API_BASE}/content`, {
       method: "POST",
       headers: adminHeaders,
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(data),
     });
     if (!response.ok) {
@@ -220,7 +220,7 @@ export const adminContentApi = {
     const response = await fetch(`${API_BASE}/content/${id}`, {
       method: "PUT",
       headers: adminHeaders,
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(data),
     });
     if (!response.ok) {
@@ -234,7 +234,7 @@ export const adminContentApi = {
     const response = await fetch(`${API_BASE}/content/${id}`, {
       method: "DELETE",
       headers: { "x-admin": "true" },
-      credentials: 'include'
+      credentials: "include",
     });
     if (!response.ok) {
       const error = await response.json();
