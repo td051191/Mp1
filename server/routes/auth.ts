@@ -90,6 +90,7 @@ export const verify: RequestHandler = async (req, res) => {
     }
 
     res.json({
+      authenticated: true,
       user: {
         id: user.id,
         username: user.username,
