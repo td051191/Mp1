@@ -636,6 +636,15 @@ class SQLiteDatabase {
     return row ? this.mapRowToAdminUser(row) : undefined;
   }
 
+  async getAdminUserById(id: string): Promise<AdminUser | undefined> {
+    const row = await this.getAsync(
+      "SELECT * FROM admin_users WHERE id = ?",
+      [id],
+    );
+
+    return row ? this.mapRowToAdminUser(row) : undefined;
+  }
+
   async validateAdminUser(
     username: string,
     password: string,
