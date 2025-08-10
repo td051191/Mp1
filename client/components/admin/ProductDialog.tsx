@@ -126,10 +126,12 @@ export function ProductDialog({
         badgeColor: data.badgeColor,
         unit: data.unit,
         origin: data.origin,
-        isOrganic: data.isOrganic,
-        isSeasonal: data.isSeasonal,
+        organic: data.isOrganic,
+        seasonal: data.isSeasonal,
+        featured: data.featured || false,
         inStock: data.inStock,
-        nutritionalInfo: {
+        weight: data.unit, // Map unit to weight for now
+        nutrition: {
           calories: parseFloat(data.calories) || 0,
           vitamin_c: parseFloat(data.vitamin_c) || 0,
           fiber: parseFloat(data.fiber) || 0,
