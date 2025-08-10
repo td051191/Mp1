@@ -119,6 +119,9 @@ export const createProduct: RequestHandler = async (req, res) => {
       rating: 0,
       reviewsCount: 0,
       inStock: productData.inStock !== undefined ? productData.inStock : true,
+      organic: productData.organic || false,
+      seasonal: productData.seasonal || false,
+      featured: productData.featured || false,
     });
 
     res.status(201).json(newProduct);
