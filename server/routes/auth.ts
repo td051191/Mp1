@@ -83,8 +83,8 @@ export const verify: RequestHandler = async (req, res) => {
       return res.status(401).json({ error: "Session expired" });
     }
 
-    // Get user details
-    const user = await db.getAdminUserByUsername("admin"); // In production, store user ID in session
+    // Get user details from session
+    const user = await db.getAdminUserById(session.userId);
     if (!user) {
       return res.status(401).json({ error: "User not found" });
     }
