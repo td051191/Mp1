@@ -21,7 +21,11 @@
     "typecheck": "tsc",
     "db:backup": "node scripts/backup-database.js backup",
     "db:restore": "node scripts/backup-database.js restore",
-    "db:list": "node scripts/backup-database.js list"
+    "db:list": "node scripts/backup-database.js list",
+    "db:migrate": "node scripts/migrate-to-postgres.js",
+    "deploy:vercel": "vercel --prod",
+    "deploy:fly": "fly deploy",
+    "postinstall": "npm run build"
   },
   "dependencies": {
     "@types/cookie-parser": "^1.4.9",
