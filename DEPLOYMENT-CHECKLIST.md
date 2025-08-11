@@ -3,6 +3,7 @@
 ## Pre-Deployment Setup
 
 ### 1. Database Setup
+
 - [ ] Choose database hosting (Neon, PlanetScale, Supabase, Railway)
 - [ ] Create production database
 - [ ] Run migration: `npm run db:migrate`
@@ -10,6 +11,7 @@
 - [ ] Backup SQLite data: `npm run db:backup`
 
 ### 2. Environment Configuration
+
 - [ ] Copy `.env.example` to `.env.production`
 - [ ] Set `DATABASE_URL` to production database
 - [ ] Generate secure `SESSION_SECRET` and `JWT_SECRET`
@@ -17,6 +19,7 @@
 - [ ] Set `NODE_ENV=production`
 
 ### 3. Code Preparation
+
 - [ ] Run tests: `npm run test`
 - [ ] Build locally: `npm run build`
 - [ ] Check TypeScript: `npm run typecheck`
@@ -25,6 +28,7 @@
 ## Deployment Options
 
 ### Option A: Vercel (Easiest)
+
 - [ ] Push code to GitHub repository
 - [ ] Connect repository to Vercel account
 - [ ] Add environment variables in Vercel dashboard
@@ -32,6 +36,7 @@
 - [ ] Configure custom domain in Vercel settings
 
 ### Option B: Railway
+
 - [ ] Create account at railway.app
 - [ ] Connect GitHub repository
 - [ ] Add PostgreSQL service
@@ -39,6 +44,7 @@
 - [ ] Deploy automatically on git push
 
 ### Option C: Fly.io
+
 - [ ] Install Fly CLI: `curl -L https://fly.io/install.sh | sh`
 - [ ] Login: `fly auth login`
 - [ ] Launch app: `fly launch`
@@ -48,11 +54,13 @@
 ## Domain Setup
 
 ### 1. Domain Registration
+
 - [ ] Purchase domain (recommended: .com, .shop, .store)
 - [ ] Configure DNS records
 - [ ] Point domain to hosting provider
 
 ### 2. SSL Certificate
+
 - [ ] Verify SSL certificate is active
 - [ ] Test HTTPS redirect
 - [ ] Update CORS origins with new domain
@@ -60,6 +68,7 @@
 ## Post-Deployment Testing
 
 ### 1. Frontend Testing
+
 - [ ] Homepage loads correctly
 - [ ] Product pages display properly
 - [ ] Categories navigation works
@@ -67,6 +76,7 @@
 - [ ] Mobile responsiveness
 
 ### 2. Admin Panel Testing
+
 - [ ] Admin login works with credentials
 - [ ] Products CRUD operations
 - [ ] Categories management
@@ -75,6 +85,7 @@
 - [ ] Data export functionality
 
 ### 3. Database Testing
+
 - [ ] Data persists between sessions
 - [ ] Admin user authentication
 - [ ] Product creation/editing
@@ -116,18 +127,21 @@ API Endpoints:    https://yourdomain.com/api/*
 ## Emergency Procedures
 
 ### Database Issues
+
 1. Check connection string
 2. Verify database service status
 3. Restore from backup if needed
 4. Contact database provider support
 
 ### Site Down
+
 1. Check hosting provider status
 2. Review deployment logs
 3. Rollback to previous version
 4. Check domain/DNS configuration
 
 ### Admin Access Issues
+
 1. Verify admin user exists in database
 2. Check session configuration
 3. Test with incognito/private browser
@@ -136,6 +150,7 @@ API Endpoints:    https://yourdomain.com/api/*
 ## Maintenance
 
 ### Regular Tasks
+
 - [ ] Weekly database backups
 - [ ] Monthly security updates
 - [ ] Quarterly dependency updates
@@ -143,6 +158,7 @@ API Endpoints:    https://yourdomain.com/api/*
 - [ ] Review error logs
 
 ### Updates
+
 - [ ] Test in staging environment first
 - [ ] Backup before major updates
 - [ ] Monitor after deployment
@@ -151,6 +167,7 @@ API Endpoints:    https://yourdomain.com/api/*
 ## Success Criteria
 
 ✅ **Deployment is successful when:**
+
 - Site loads on custom domain with HTTPS
 - All pages render correctly
 - Admin panel authentication works
@@ -169,7 +186,8 @@ API Endpoints:    https://yourdomain.com/api/*
 
 **Estimated Deployment Time**: 2-4 hours for first deployment, 30 minutes for subsequent updates.
 
-**Recommended Budget**: 
+**Recommended Budget**:
+
 - Domain: $10-15/year
 - Hosting: $0-20/month (depending on traffic)
 - Database: $0-10/month (most plans include free tier)
