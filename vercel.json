@@ -18,7 +18,7 @@
   "routes": [
     {
       "src": "/api/(.*)",
-      "dest": "/netlify/functions/api.ts"
+      "dest": "/api/api.ts"
     },
     {
       "src": "/(.*)",
