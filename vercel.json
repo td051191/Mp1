@@ -1,1 +1,31 @@
-{ "version": 2, "builds": [ { "src": "client/**/*", "use": "@vercel/static-build", "config": { "distDir": "dist/spa" } }, { "src": "server/index.ts", "use": "@vercel/node" } ], "routes": [ { "src": "/api/(.*)", "dest": "/server/index.ts" }, { "src": "/(.*)", "dest": "/dist/spa/$1" } ], "env": { "DATABASE_URL": "postgresql://neondb_owner:npg_Ge2YPJ0yvskQ@ep-little-king-aex77s9s-pooler.c-2.us-east-2.aws.neon.tech/neondb?sslmode=require&channel_binding=require" } }
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist/spa"
+      }
+    }
+  ],
+  "functions": {
+    "netlify/functions/api.ts": {
+      "memory": 1024,
+      "maxDuration": 30
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/netlify/functions/api.ts"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/dist/spa/index.html"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production"
+  }
+}
