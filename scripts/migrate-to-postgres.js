@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-
+import "dotenv/config";
 import { Pool } from "pg";
 import sqlite3 from "sqlite3";
 import fs from "fs";
